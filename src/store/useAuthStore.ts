@@ -29,7 +29,7 @@ interface AuthState {
   forceLogout: () => void;
   loadAvatar: () => Promise<void>;
   cleanupAndLogout: () => void;
-  handleAuthError: (error: any, isFromApiCall?: boolean) => void;
+  handleAuthError: (error: unknown, isFromApiCall?: boolean) => void;
 }
 
 // 헬퍼 함수들 (store 외부에서도 사용 가능)
@@ -50,8 +50,10 @@ function shouldTreatAsExpiredSession(): boolean {
 
   return false;
 }
-function determineLogoutReason(error: any): "expired" | "revoked" {
-  const code = error?.response?.data?.code;
+function determineLogoutReason(error: unknown): "expired" | "revoked" {
+  const code = error && typeof error === 'object' && 'response' in error
+    ? (error as { response?: { data?: { code?: string } } }).response?.data?.code
+    : undefined;
 
   // 서버에서 명시적으로 중복로그인/세션충돌을 알려주는 경우
   if (code === "REFRESH_REVOKED" || code === "SESSION_CONFLICT") {
@@ -164,7 +166,7 @@ export const useAuthStore = create<AuthState>()(
 
       // API 호출 시 인증 오류 처리 (apiClient 인터셉터에서 사용)
       // handleAuthError 메서드만 수정된 부분
-      handleAuthError: (error: any, isFromApiCall = true) => {
+      handleAuthError: (error: unknown, isFromApiCall = true) => {
         const hadSession = shouldTreatAsExpiredSession();
 
         // 세션이 없었던 경우 조용히 로그아웃 (콜드 부팅)

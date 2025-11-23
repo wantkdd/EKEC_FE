@@ -23,7 +23,7 @@ export const resolveCategoryId = ({
   rawCategory,
   allowedCategories,
 }: {
-  detail: any;
+  detail: Record<string, unknown>;
   rawCategory?: number;
   allowedCategories: number[];
 }) => {
