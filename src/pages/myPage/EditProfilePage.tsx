@@ -12,7 +12,7 @@ import Modal from "../../components/common/Modal";
 import ableBtn from "../../assets/signIn/btn_login_520x68.svg";
 import disabledBtn from "../../assets/buttons/disabled.svg";
 import { useAuthStore } from "../../store/useAuthStore";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 import successIcon from "../../assets/icons/img_graphic2_340.svg";
 import failIcon from "../../assets/icons/img_graphic3_340.svg";
 

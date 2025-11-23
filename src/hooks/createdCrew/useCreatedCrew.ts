@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import type { CreatedCrew } from "../../types/mypage/CreateCrew";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 
 interface CrewApiResponse {
   crewId: number;

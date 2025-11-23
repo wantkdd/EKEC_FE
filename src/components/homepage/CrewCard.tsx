@@ -53,9 +53,9 @@ export default function CrewCard({ crew }: CrewCardProps) {
 
       {/* 태그 */}
       <div className="flex flex-wrap gap-[0.25rem] text-[0.75rem] text-gray-400">
-        {crew.tags.map((tag, i) => (
+        {crew.tags.map((tag) => (
           <div
-            key={i}
+            key={tag}
             className="rounded-2xl px-[0.375rem] py-[0.125rem] bg-[#EFF0F4] font-medium"
           >
             #{tag}

@@ -1,4 +1,4 @@
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 import type {
   EnhancedAlarm,
   Alarm,

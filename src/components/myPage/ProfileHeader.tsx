@@ -3,7 +3,7 @@ import noProfileImage from "../../assets/icons/ic_logo graphic_74.svg";
 import camera from "../../assets/icons/ic_line_Camera.svg";
 import { useAuthStore } from "../../store/useAuthStore";
 import { imageUrlHelpers } from "../../apis/image";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 import Modal from "../common/Modal";
 import yesIcon from "../../assets/icons/img_graphic2_340.svg";
 import noIcon from "../../assets/icons/img_graphic3_340.svg";

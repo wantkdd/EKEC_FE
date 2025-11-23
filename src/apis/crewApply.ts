@@ -7,7 +7,7 @@ import type {
   AppliedListSuccess,
   ApplyRequestBody,
 } from "../types/apply/types";
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
 
 //승인 거부 props
 export interface ApprovalRequest {

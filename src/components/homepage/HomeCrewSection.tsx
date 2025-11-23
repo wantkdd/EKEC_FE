@@ -5,7 +5,7 @@ import CrewSelector from "./CrewSelector";
 import { useNavigate } from "react-router-dom";
 import HomeCrewSectionSkeleton from "./HomeCrewSectionSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import { API } from "../../apis/axios";
+import { API } from '../../apis/httpClient';
 import { buildFreshQS } from "../../utils/crewFilter/buildCrewListQs";
 
 export default function HomeCrewSection() {

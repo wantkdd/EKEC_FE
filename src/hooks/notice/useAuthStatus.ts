@@ -1,6 +1,6 @@
 // hooks/useAuthStatus.ts
 import { useQuery } from "@tanstack/react-query";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 
 export const useAuthStatus = () => {
   return useQuery({

@@ -1,4 +1,4 @@
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
 import type {
   RequestCreatePostDto,
   ResponseCreatePostDto,

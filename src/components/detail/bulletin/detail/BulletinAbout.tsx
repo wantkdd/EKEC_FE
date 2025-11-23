@@ -15,11 +15,11 @@ const BulletinAbout: React.FC<BulletinAboutProps> = ({ bulletin }) => {
 
       {bulletin?.images && bulletin.images.length > 0 && (
         <div className="mt-4 space-y-2">
-          {bulletin.images.map((imageUrl, index) => (
+          {bulletin.images.map((imageUrl) => (
             <img
-              key={index}
+              key={imageUrl}
               src={imageUrl}
-              alt={`첨부 이미지 ${index + 1}`}
+              alt="첨부 이미지"
               className="max-w-full h-auto rounded-lg"
             />
           ))}

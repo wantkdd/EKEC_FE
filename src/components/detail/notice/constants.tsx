@@ -1,5 +1,5 @@
 
-import { privateAPI } from "../../../apis/axios";
+import { privateAPI } from '../../../apis/httpClient';
 
 const enc = (v: string | number) => encodeURIComponent(String(v));
 const ok = (d: any) => d?.resultType === "SUCCESS" || d?.success;

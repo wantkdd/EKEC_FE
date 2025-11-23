@@ -10,7 +10,7 @@ import type {
   CrewInfoRequest,
   ServerQuestion,
 } from "../../types/crewCreate/crew";
-import { API } from "../../apis/axios";
+import { privateAPI } from "../../apis/httpClient";
 import { toServerCrewInfo } from "../../utils/mappers/crewInfoMapper";
 
 const crewCreatePage = () => {
@@ -62,11 +62,9 @@ const crewCreatePage = () => {
       fd.append("crewInfo", JSON.stringify(crewInfo));
       fd.append("applicationForm", JSON.stringify({ questions }));
 
-      const token = localStorage.getItem("accessToken");
-      const res = await API.post("/crew/create", fd, {
+      const res = await privateAPI.post("/crew/create", fd, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
         },
       });
       return res.data;

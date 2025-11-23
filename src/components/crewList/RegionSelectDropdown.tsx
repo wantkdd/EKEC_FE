@@ -117,9 +117,9 @@ const RegionSelectDropdown = ({
           <div className="bg-[#EFF0F4]">
             {/* 태그 */}
             <div className="flex flex-wrap p-4 gap-2 bg-[#EFF0F4]">
-              {selectedRegions.map((r, i) => (
+              {selectedRegions.map((r) => (
                 <div
-                  key={i}
+                  key={`${r.city}-${r.district}`}
                   className="flex items-center gap-1 px-2 py-1 bg-[#C5C6CB] rounded-md text-base font-medium text-[#5E6068]"
                 >
                   {r.city} {r.district}

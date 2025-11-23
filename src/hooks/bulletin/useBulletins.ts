@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 import type {
   BulletinApiResponse,
   BulletinDetailApiResponse,
