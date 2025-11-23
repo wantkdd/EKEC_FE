@@ -1,5 +1,6 @@
 import { fetchAllUpcomingPlans } from "../../apis/upcomming";
 import { useState, useEffect } from "react";
+import { logger } from "../../utils/logger";
 
 interface ScheduleData {
   id: number; // 고유 ID 추가
@@ -45,7 +46,7 @@ export const useUpcomingSchedules = () => {
       setSchedules(mapped);
     } catch (err) {
       setError("일정을 불러오는데 실패했습니다.");
-      console.error("Failed to fetch schedules:", err);
+      logger.error("Failed to fetch schedules", err);
     } finally {
       setLoading(false);
     }

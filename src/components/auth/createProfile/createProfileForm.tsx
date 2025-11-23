@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { logger } from "../../../utils/logger";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
@@ -60,7 +61,7 @@ const CreateProfileForm = () => {
     try {
       await createProfileMutation.mutateAsync(profileData);
     } catch (error) {
-      console.error("프로필 생성 실패:", error);
+      logger.error("프로필 생성 실패:", error);
     }
   };
 

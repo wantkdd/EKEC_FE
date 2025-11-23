@@ -1,4 +1,4 @@
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
 import type {
   RequestCreatePostDto,
   ResponseCreatePostDto,
@@ -8,6 +8,7 @@ import type {
   ResponseGetBulletinComments,
   BulletinCommentData,
 } from "../types/bulletin/types";
+import { logger } from "../utils/logger";
 
 // 게시글 생성 API
 export const createBulletinApi = async (
@@ -47,7 +48,7 @@ export const updateBulletinApi = async (
   postId: string,
   data: RequestUpdatePostDto
 ) => {
-  console.log("🚀 updateBulletinApi 호출:", {
+  logger.debug("updateBulletinApi 호출", {
     crewId,
     postId,
     data,
@@ -59,13 +60,13 @@ export const updateBulletinApi = async (
   formData.append("content", data.content);
 
   // 기존 이미지 ID들 추가
-  console.log("📷 기존 이미지 IDs:", data.existingImageIds);
+  logger.debug("기존 이미지 IDs", { existingImageIds: data.existingImageIds });
   (data.existingImageIds || []).forEach((id) => {
     formData.append("existingImageIds", id.toString());
   });
 
   // 새 이미지들 추가
-  console.log("🖼️ 새 이미지들:", data.images);
+  logger.debug("새 이미지들", { images: data.images });
   (data.images || []).forEach((image) => {
     formData.append("images", image);
   });
@@ -140,15 +141,13 @@ export const createBulletinCommentApi = async (
   postId: string,
   data: RequestCreateBulletinComment
 ): Promise<ResponseCreateBulletinComment> => {
-  console.log(
-    `[createBulletinCommentApi] Requesting: POST /crew/${crewId}/post/${postId}/comment`
-  );
-  console.log("[createBulletinCommentApi] data:", data);
+  logger.debug(`[createBulletinCommentApi] Requesting: POST /crew/${crewId}/post/${postId}/comment`);
+  logger.debug("[createBulletinCommentApi] data", { data });
   const response = await privateAPI.post<ResponseCreateBulletinComment>(
     `/crew/${crewId}/post/${postId}/comment`,
     data
   );
-  console.log("[createBulletinCommentApi] response.data:", response.data);
+  logger.debug("[createBulletinCommentApi] response.data", { responseData: response.data });
 
   // 응답 데이터의 이미지 URL 변환
   if (response.data.data && response.data.data.image) {
@@ -165,13 +164,13 @@ export const getBulletinCommentsApi = async (
   page: number = 1,
   size: number = 10
 ): Promise<ResponseGetBulletinComments> => {
-  console.log(
+  logger.debug(
     `[getBulletinCommentsApi] Requesting: GET /crew/${crewId}/post/${postId}/comment?page=${page}&size=${size}`
   );
   const response = await privateAPI.get<ResponseGetBulletinComments>(
     `/crew/${crewId}/post/${postId}/comment/list?page=${page}&size=${size}`
   );
-  console.log("[getBulletinCommentsApi] response.data:", response.data);
+  logger.debug("[getBulletinCommentsApi] response.data", { responseData: response.data });
 
   // 댓글 데이터의 이미지 URL 변환
   if (response.data.data?.comments) {
@@ -190,15 +189,15 @@ export const updateBulletinCommentApi = async (
   commentId: string,
   data: { content: string; isPublic: number }
 ): Promise<ResponseCreateBulletinComment> => {
-  console.log(
+  logger.debug(
     `[updateBulletinCommentApi] Requesting: PUT /crew/${crewId}/post/${postId}/comment/${commentId}`
   );
-  console.log("[updateBulletinCommentApi] data:", data);
+  logger.debug("[updateBulletinCommentApi] data", { data });
   const response = await privateAPI.put<ResponseCreateBulletinComment>(
     `/crew/${crewId}/post/${postId}/comment/${commentId}`,
     data
   );
-  console.log("[updateBulletinCommentApi] response.data:", response.data);
+  logger.debug("[updateBulletinCommentApi] response.data", { responseData: response.data });
 
   // 응답 데이터의 이미지 URL 변환
   if (response.data.data && response.data.data.image) {
@@ -214,7 +213,7 @@ export const deleteBulletinCommentApi = async (
   postId: string,
   commentId: string
 ): Promise<{ resultType: "SUCCESS" | "FAIL"; error: null; data: null }> => {
-  console.log(
+  logger.debug(
     `[deleteBulletinCommentApi] Requesting: DELETE /crew/${crewId}/post/${postId}/comment/${commentId}`
   );
   const response = await privateAPI.delete<{
@@ -222,7 +221,7 @@ export const deleteBulletinCommentApi = async (
     error: null;
     data: null;
   }>(`/crew/${crewId}/post/${postId}/comment/${commentId}`);
-  console.log("[deleteBulletinCommentApi] response.data:", response.data);
+  logger.debug("[deleteBulletinCommentApi] response.data", { responseData: response.data });
 
   return response.data;
 };
@@ -236,7 +235,7 @@ export const likeBulletinApi = async (
   error: null;
   data: { likeCount?: number };
 }> => {
-  console.log(
+  logger.debug(
     `[likeBulletinApi] Requesting: POST /crew/${crewId}/post/${postId}/like`
   );
   const response = await privateAPI.post<{
@@ -244,7 +243,7 @@ export const likeBulletinApi = async (
     error: null;
     data: { likeCount?: number };
   }>(`/crew/${crewId}/post/${postId}/like`);
-  console.log("[likeBulletinApi] response.data:", response.data);
+  logger.debug("[likeBulletinApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -257,7 +256,7 @@ export const unlikeBulletinApi = async (
   error: null;
   data: { likeCount?: number };
 }> => {
-  console.log(
+  logger.debug(
     `[unlikeBulletinApi] Requesting: DELETE /crew/${crewId}/post/${postId}/like`
   );
   const response = await privateAPI.post<{
@@ -265,6 +264,6 @@ export const unlikeBulletinApi = async (
     error: null;
     data: { likeCount?: number };
   }>(`/crew/${crewId}/post/${postId}/like`);
-  console.log("[unlikeBulletinApi] response.data:", response.data);
+  logger.debug("[unlikeBulletinApi] response.data", { responseData: response.data });
   return response.data;
 };

@@ -1,4 +1,5 @@
 import TypeSelector from "./EditTypeSelector";
+import { logger } from "../../../../../utils/logger";
 import PermissionSelector from "./EditPermissionSelector";
 import TitleInput from "./EditTitleInput";
 import ContentInput from "./EditContentInput";
@@ -12,6 +13,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { getNoticeDetail, updateNotice } from "../../constants";
+import { showSuccess, showError } from "../../../../../utils/toast";
 
 const EditScheduleForm = () => {
   const navigate = useNavigate();
@@ -52,7 +54,7 @@ const EditScheduleForm = () => {
           if (Array.isArray(d.images)) setExistingImageUrls(d.images.filter((u: any) => typeof u === "string"));
         }
       } catch (err) {
-        console.error("공지 상세 조회 실패:", err);
+        logger.error("공지 상세 조회 실패:", err);
       }
     };
     fetchDetail();
@@ -60,12 +62,12 @@ const EditScheduleForm = () => {
 
   const handleSubmit = async () => {
     if (!crewId || !noticeId) {
-      alert("잘못된 접근입니다.");
+      showError("잘못된 접근입니다.");
       return;
     }
 
     if (!title.trim() || !content.trim()) {
-      alert("제목과 내용을 입력해주세요.");
+      showError("제목과 내용을 입력해주세요.");
       return;
     }
 
@@ -99,11 +101,11 @@ const EditScheduleForm = () => {
           ),
       });
 
-      alert("수정 성공!");
+      showSuccess("수정 성공!");
       navigate(`/crew/${crewId}/notice/${noticeId}`);
     } catch (err: any) {
-      console.error("수정 실패:", err);
-      alert(err?.message || "수정 중 오류가 발생했습니다.");
+      logger.error("수정 실패:", err);
+      showError(err?.message || "수정 중 오류가 발생했습니다.");
     } finally {
       setIsSubmitting(false);
     }

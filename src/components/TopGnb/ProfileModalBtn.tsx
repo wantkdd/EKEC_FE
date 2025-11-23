@@ -26,11 +26,14 @@ export default function ModalButton({
       onClick={onClick}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
+      aria-label={label}
+      role="menuitem"
       className={`w-full px-4 py-2 text-left flex items-center gap-1 cursor-pointer hover:bg-[#ECECFC] hover:text-[#3A3ADB] ${rounded}`}
     >
       <img
         src={hover ? hoverIcon : defaultIcon}
-        alt="icon"
+        alt=""
+        aria-hidden="true"
         className="w-4 h-4"
       />
       {label}

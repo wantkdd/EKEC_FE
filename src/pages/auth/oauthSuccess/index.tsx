@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { logger } from "../../../utils/logger";
 import { useNavigate } from "react-router-dom";
 import { refreshApi } from "../../../apis/auth";
 import { useAuthStore } from "../../../store/useAuthStore";
@@ -31,7 +32,7 @@ const OAuthSuccess = () => {
           throw new Error("유저 정보 없음");
         }
       } catch (err) {
-        console.error("OAuth 로그인 처리 중 에러:", err);
+        logger.error("OAuth 로그인 처리 중 에러:", err);
         setUser(null);
         setStatus("unauthenticated");
         navigate("/signIn");

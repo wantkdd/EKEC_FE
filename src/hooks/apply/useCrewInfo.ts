@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 // hooks/useCrewInfo.ts
 
 import { useState, useEffect } from "react";
@@ -42,7 +43,7 @@ export const useCrewInfo = (
         setCrewInfo(null);
       }
     } catch (err) {
-      console.error("크루 정보 조회 에러:", err);
+      logger.error("크루 정보 조회 에러:", err);
       setError("크루 정보를 불러오는 중 오류가 발생했습니다.");
       setCrewInfo(null);
     } finally {

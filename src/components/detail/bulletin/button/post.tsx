@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { showError } from "../../../../utils/toast";
 
 const BulletinPostButton: React.FC = () => {
   const navigate = useNavigate();
@@ -7,7 +8,7 @@ const BulletinPostButton: React.FC = () => {
 
   const handleClick = () => {
     if (!crewId) {
-      alert("crewId가 없습니다!");
+      showError("crewId가 없습니다!");
       return;
     }
 

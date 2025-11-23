@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from "../../../utils/logger";
 import Input from "../input";
 import AuthBtn from "../authBtn";
 import infoIcon from "../../../assets/icons/createProfile/info.svg";
@@ -21,18 +22,18 @@ const PhoneNumberForm = ({
 
   const handlePhoneVerification = () => {
     // TODO: 전화번호 인증 로직
-    console.log("전화번호 인증:", phoneNumber);
+    logger.debug("전화번호 인증:", phoneNumber);
   };
 
   // const handleCodeVerification = () => {
   //   // TODO: 인증번호 확인 로직
-  //   console.log("인증번호 확인:", verificationCode);
+  //   logger.debug("인증번호 확인:", verificationCode);
   //   setIsVerified(true);
   // };
 
   const handleResend = () => {
     // TODO: 인증번호 재전송 로직
-    console.log("인증번호 재전송");
+    logger.debug("인증번호 재전송");
   };
 
   return (

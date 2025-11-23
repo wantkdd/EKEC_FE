@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { signInApi, refreshApi } from "../../apis/auth";
@@ -5,6 +6,7 @@ import type { RequestSign, ResponseSign } from "../../types/auth/types";
 import { useAuthStore } from "../../store/useAuthStore";
 import { useErrorModal } from "./useErrorModal";
 import { authMeta } from "../../utils/authMeta";
+import { showError } from "../../utils/toast";
 
 export const useSignIn = () => {
   const navigate = useNavigate();
@@ -44,7 +46,7 @@ export const useSignIn = () => {
             throw new Error("Failed to get user info");
           }
         } catch (error) {
-          console.error("Post-login user fetch failed:", error);
+          logger.error("Post-login user fetch failed", error);
 
           // refreshApi 실패 시, 로그인 응답에서 받은 데이터로라도 처리
           if (response.data) {
@@ -88,12 +90,13 @@ export const useSignIn = () => {
       }
     },
 
-    onError: (error: any) => {
-      console.error("로그인 오류:", error);
+    onError: (error: unknown) => {
+      logger.error("로그인 오류", error);
 
-      if (error.response) {
-        const status = error.response.status;
-        const errorData = error.response.data;
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status?: number; data?: { error?: { errorCode?: string } } } };
+        const status = axiosError.response?.status;
+        const errorData = axiosError.response?.data;
 
         if (status === 404) {
           showSignUpPromptModal();
@@ -104,7 +107,7 @@ export const useSignIn = () => {
         }
       }
 
-      alert("로그인 중 오류가 발생했습니다.");
+      showError("로그인 중 오류가 발생했습니다.");
     },
   });
 };

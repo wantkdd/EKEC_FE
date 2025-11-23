@@ -1,5 +1,6 @@
 import type { MemberCardProps } from "../../../types/detail/crewMember";
 import logo from "../../../assets/logo/ic_logo graphic_45.svg";
+import { logger } from "../../../utils/logger";
 import dot from "../../../assets/icons/ic_Dot_36.svg";
 import ToggleMenuWrapper from "./ToggleMenuWrapper";
 import { useKickCrewMember } from "../../../hooks/CrewMemberList/useKickCrewMember";
@@ -35,9 +36,9 @@ export default function MemberCard({
     kick(memberId);
   };
 
-  const handleWarn = () => console.log(`${id} 경고하기`);
+  const handleWarn = () => logger.debug(`${id} 경고하기`);
   const handleRoleChange = () => {
-    console.log(`${id} ${role === "운영진" ? "운영진 제외" : "운영진 승격"}`);
+    logger.debug(`${id} ${role === "운영진" ? "운영진 제외" : "운영진 승격"}`);
     if (onPromoteOrDemote) {
       onPromoteOrDemote(id, role === "운영진" ? 1 : 0); //  실제 값 전달
     }

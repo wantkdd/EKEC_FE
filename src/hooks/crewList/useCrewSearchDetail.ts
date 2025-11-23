@@ -1,5 +1,5 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { API } from "../../apis/axios";
+import { API } from '../../apis/httpClient';
 import type { Crew } from "../../types/crewCreate/crew";
 import { getRegionId } from "../../utils/regions";
 

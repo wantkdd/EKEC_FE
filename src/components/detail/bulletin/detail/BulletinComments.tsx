@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from "../../../../utils/logger";
 import { AnimatePresence, motion } from "framer-motion";
 import CommentForm from "./components/CommentForm";
 import CommentList from "./components/CommentList";
@@ -7,6 +8,7 @@ import { useGetBulletinComments } from "../../../../hooks/bulletin/useGetBulleti
 import { useCreateBulletinComment } from "../../../../hooks/bulletin/useCreateBulletinComment";
 import { useUpdateBulletinComment } from "../../../../hooks/bulletin/useUpdateBulletinComment";
 import { useDeleteBulletinComment } from "../../../../hooks/bulletin/useDeleteBulletinComment";
+import { showSuccess, showConfirm } from "../../../../utils/toast";
 
 type Props = {
   isOpen: boolean;
@@ -61,7 +63,7 @@ const BulletinComments = ({
         isPublic: isPrivate ? 1 : 0,
       });
     } catch (error) {
-      console.error("댓글 작성 실패:", error);
+      logger.error("댓글 작성 실패:", error);
     }
   };
 
@@ -86,7 +88,7 @@ const BulletinComments = ({
       setEditingCommentId(null);
       setEditContent("");
     } catch (error) {
-      console.error("댓글 수정 실패:", error);
+      logger.error("댓글 수정 실패:", error);
     }
   };
 
@@ -96,16 +98,16 @@ const BulletinComments = ({
   };
 
   const handleDelete = async (commentId: number) => {
-    if (!confirm("댓글을 삭제하시겠습니까?")) return;
+    if (!(await showConfirm("댓글을 삭제하시겠습니까?"))) return;
     try {
       await deleteCommentMutation.mutateAsync(commentId.toString());
     } catch (error) {
-      console.error("댓글 삭제 실패:", error);
+      logger.error("댓글 삭제 실패:", error);
     }
   };
 
   const handleReport = () => {
-    alert("신고가 완료되었습니다.");
+    showSuccess("신고가 완료되었습니다.");
   };
 
   if (isLoading) {

@@ -103,7 +103,7 @@ const QuestionItem = ({
           {type === "checkbox" ? (
             <div className="flex flex-col gap-2">
               {options.map((opt, i) => (
-                <div key={i} className="relative w-full">
+                <div key={`opt-${i}`} className="relative w-full">
                   <img
                     src={uncheckedIcon}
                     alt="checkbox"

@@ -1,4 +1,5 @@
 import logo from "../../assets/icons/ic_logo graphic_74.svg";
+import { logger } from "../../utils/logger";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -10,7 +11,7 @@ import type {
   CrewInfoRequest,
   ServerQuestion,
 } from "../../types/crewCreate/crew";
-import { API } from "../../apis/axios";
+import { privateAPI } from "../../apis/httpClient";
 import { toServerCrewInfo } from "../../utils/mappers/crewInfoMapper";
 
 const crewCreatePage = () => {
@@ -31,7 +32,7 @@ const crewCreatePage = () => {
     setDraft(payload.draft);
     setBannerImage(payload.bannerImage);
     setStep(2);
-    console.log("[handleInfoNext] banner:", payload.bannerImage);
+    logger.debug("[handleInfoNext] banner:", payload.bannerImage);
   };
 
   const createCrewMutation = useMutation({
@@ -48,7 +49,7 @@ const crewCreatePage = () => {
         recruitMessage,
       });
 
-      console.log("[bannerImage]", bannerImage, {
+      logger.debug("[bannerImage]", bannerImage, {
         isFile: bannerImage instanceof File,
         name: bannerImage?.name,
         size: bannerImage?.size,
@@ -62,11 +63,9 @@ const crewCreatePage = () => {
       fd.append("crewInfo", JSON.stringify(crewInfo));
       fd.append("applicationForm", JSON.stringify({ questions }));
 
-      const token = localStorage.getItem("accessToken");
-      const res = await API.post("/crew/create", fd, {
+      const res = await privateAPI.post("/crew/create", fd, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${token}`,
         },
       });
       return res.data;
@@ -80,11 +79,11 @@ const crewCreatePage = () => {
         // 목록 화면 캐시를 쓰고 있다면 무효화
         queryClient.invalidateQueries({ queryKey: ["crewList"] });
       } else {
-        console.warn("생성 성공했지만 crewId를 찾지 못했습니다.", data);
+        logger.warn("생성 성공했지만 crewId를 찾지 못했습니다.", data);
       }
     },
     onError: (err) => {
-      console.error("크루 생성 실패:", err);
+      logger.error("크루 생성 실패:", err);
     },
   });
 

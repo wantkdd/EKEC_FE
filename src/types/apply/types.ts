@@ -63,7 +63,7 @@ export type ApiSuccess = {
 
 export type ApiResponse = {
   resultType: "SUCCESS" | "FAIL";
-  error: any;
+  error: { errorCode?: string; reason?: string; data?: unknown } | string | null;
   success: ApiSuccess;
 };
 
@@ -146,7 +146,7 @@ export interface ApplyRequestBody {
 // 서버 응답 원형(DTO)
 export type ApplicantsDTO = {
   resultType: "SUCCESS" | "FAIL";
-  error: any;
+  error: { errorCode?: string; reason?: string; data?: unknown } | string | null;
   success: {
     applicants: {
       totalCount: number;

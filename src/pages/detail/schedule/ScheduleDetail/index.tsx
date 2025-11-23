@@ -5,6 +5,7 @@ import { useDeleteSchedule } from "../../../../hooks/schedule/useDeleteSchedule"
 import { useScheduleApply } from "../../../../hooks/schedule/useScheduleApply";
 import { useScheduleLikeState } from "../../../../hooks/schedule/useScheduleLikeState";
 import { useAuthStore } from "../../../../store/useAuthStore";
+import { showError, showConfirm } from "../../../../utils/toast";
 import Header from "../../../../components/detail/header";
 import Tabs from "../../../../components/detail/tabs";
 import ScheduleNotice from "../../../../components/detail/Schedule/ScheduleNotice";
@@ -54,13 +55,13 @@ const ScheduleDetail = () => {
   };
 
   // 일정 삭제
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!crewId || !id) {
-      alert("크루 ID 또는 일정 ID가 없습니다.");
+      showError("크루 ID 또는 일정 ID가 없습니다.");
       return;
     }
 
-    if (window.confirm("정말로 이 일정을 삭제하시겠습니까?")) {
+    if (await showConfirm("정말로 이 일정을 삭제하시겠습니까?")) {
       deleteScheduleMutation.mutate({
         crewId,
         planId: id,

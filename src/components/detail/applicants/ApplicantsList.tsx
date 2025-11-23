@@ -1,4 +1,5 @@
 import { useParams } from "react-router-dom";
+import { logger } from "../../../utils/logger";
 import ApplicantCard from "./ApplicantCard";
 import { useApplicants } from "../../../hooks/apply/useApplicants";
 import { useInfinite } from "../../../hooks/apply/useInfinite";
@@ -53,7 +54,7 @@ export default function ApplicantsList() {
                 date={a.appliedAt.slice(0, 10)}
                 crewId={crewId}
                 applyId={a.applyid}
-                onConfirm={() => console.log(`${a.nickname} 확인하기 클릭`)}
+                onConfirm={() => logger.debug(`${a.nickname} 확인하기 클릭`)}
               />
             ))}
           </div>

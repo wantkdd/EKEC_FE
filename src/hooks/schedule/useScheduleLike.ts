@@ -1,5 +1,7 @@
+import { logger } from "../../utils/logger";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likeScheduleApi, unlikeScheduleApi } from "../../apis/schedule";
+import type { ResponseScheduleDetail } from "../../types/detail/schedule/types";
 
 // 좋아요 추가
 export function useLikeSchedule(crewId: string) {
@@ -9,7 +11,7 @@ export function useLikeSchedule(crewId: string) {
     mutationFn: (planId: string) => likeScheduleApi(crewId, planId),
 
     onMutate: async (planId: string) => {
-      console.log("💙 좋아요 추가 시작");
+      logger.debug("💙 좋아요 추가 시작");
 
       // 기존 쿼리 취소
       await queryClient.cancelQueries({
@@ -27,14 +29,17 @@ export function useLikeSchedule(crewId: string) {
       if (previousData) {
         queryClient.setQueryData(
           ["scheduleDetail", crewId, planId],
-          (old: any) => ({
-            ...old,
-            data: {
-              ...old.data,
-              likeCount: (old.data.likeCount || 0) + 1,
-              isLiked: true,
-            },
-          })
+          (old: ResponseScheduleDetail | undefined) => {
+            if (!old) return old;
+            return {
+              ...old,
+              data: {
+                ...old.data,
+                likeCount: (old.data.likeCount || 0) + 1,
+                isLiked: true,
+              },
+            };
+          }
         );
       }
 
@@ -45,7 +50,7 @@ export function useLikeSchedule(crewId: string) {
       // 성공 시 isLiked를 true로 설정
       queryClient.setQueryData(
         ["scheduleDetail", crewId, planId],
-        (old: any) => {
+        (old: ResponseScheduleDetail | undefined) => {
           if (!old?.data) return old;
           return {
             ...old,
@@ -65,7 +70,7 @@ export function useLikeSchedule(crewId: string) {
     },
 
     onError: (error, planId, context) => {
-      console.log("좋아요 추가 실패", error);
+      logger.debug("좋아요 추가 실패", error);
       // 이전 상태로 롤백
       if (context?.previousData) {
         queryClient.setQueryData(
@@ -77,7 +82,7 @@ export function useLikeSchedule(crewId: string) {
       // 에러가 발생하면 isLiked를 false로 설정 (중복 클릭 방지)
       queryClient.setQueryData(
         ["scheduleDetail", crewId, planId],
-        (old: any) => {
+        (old: ResponseScheduleDetail | undefined) => {
           if (!old?.data) return old;
           return {
             ...old,
@@ -116,14 +121,17 @@ export function useUnlikeSchedule(crewId: string) {
       if (previousData) {
         queryClient.setQueryData(
           ["scheduleDetail", crewId, planId],
-          (old: any) => ({
-            ...old,
-            data: {
-              ...old.data,
-              likeCount: Math.max((old.data.likeCount || 0) - 1, 0),
-              isLiked: false,
-            },
-          })
+          (old: ResponseScheduleDetail | undefined) => {
+            if (!old) return old;
+            return {
+              ...old,
+              data: {
+                ...old.data,
+                likeCount: Math.max((old.data.likeCount || 0) - 1, 0),
+                isLiked: false,
+              },
+            };
+          }
         );
       }
 
@@ -134,7 +142,7 @@ export function useUnlikeSchedule(crewId: string) {
       // 성공 시 isLiked를 false로 설정
       queryClient.setQueryData(
         ["scheduleDetail", crewId, planId],
-        (old: any) => {
+        (old: ResponseScheduleDetail | undefined) => {
           if (!old?.data) return old;
           return {
             ...old,
@@ -156,7 +164,7 @@ export function useUnlikeSchedule(crewId: string) {
     },
 
     onError: (error, planId, context) => {
-      console.log("좋아요 추가 실패", error);
+      logger.debug("좋아요 추가 실패", error);
       // 이전 상태로 롤백
       if (context?.previousData) {
         queryClient.setQueryData(
@@ -168,7 +176,7 @@ export function useUnlikeSchedule(crewId: string) {
       // 에러가 발생하면 isLiked를 true로 설정
       queryClient.setQueryData(
         ["scheduleDetail", crewId, planId],
-        (old: any) => {
+        (old: ResponseScheduleDetail | undefined) => {
           if (!old?.data) return old;
           return {
             ...old,

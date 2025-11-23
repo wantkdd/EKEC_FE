@@ -2,6 +2,7 @@ import type { BulletinCommentData } from "../../../../../types/bulletin/types";
 import ProfileImage from "../../../../common/ProfileImage";
 import CommentDropdown from "./CommentDropdown";
 import { formatDate, getCommentContent } from "../utils//commentUtils";
+import { showError } from "../../../../../utils/toast";
 
 type Props = {
   comment: BulletinCommentData;
@@ -32,7 +33,7 @@ const CommentItem = ({
 }: Props) => {
   const handleSaveEdit = () => {
     if (!editContent.trim()) {
-      alert("댓글 내용을 입력해주세요.");
+      showError("댓글 내용을 입력해주세요.");
       return;
     }
     onSaveEdit(comment.commentId, editContent.trim(), comment.isPublic === 1);

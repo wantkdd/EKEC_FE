@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateCommentApi } from "../../apis/schedule";
 import type { RequestUpdateComment } from "../../types/detail/schedule/types";
@@ -7,7 +8,7 @@ interface UseUpdateCommentParams {
   planId: string;
   commentId: number;
   onSuccess?: () => void;
-  onError?: (error: any) => void;
+  onError?: (error: Error) => void;
 }
 
 export const useUpdateComment = ({
@@ -31,7 +32,7 @@ export const useUpdateComment = ({
       onSuccess?.();
     },
     onError: (error) => {
-      console.error("[useUpdateComment] Error:", error);
+      logger.error("[useUpdateComment] Error:", error);
       onError?.(error);
     },
   });

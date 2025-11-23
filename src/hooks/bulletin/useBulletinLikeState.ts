@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useState, useEffect } from "react";
 import { useLikeBulletin, useUnlikeBulletin } from "./useBulletinLike";
 
@@ -25,13 +26,13 @@ export const useBulletinLikeState = (
 
   const handleLikeToggle = () => {
     if (!crewId || !postId) {
-      console.error("크루 ID 또는 게시글 ID가 없습니다.");
+      logger.error("크루 ID 또는 게시글 ID가 없습니다.");
       return;
     }
 
     const currentLikeStatus = localLikeState[postId] ?? serverLikeStatus;
 
-    console.log(
+    logger.debug(
       "🔄 [BULLETIN LIKE ACTION] 로컬상태:",
       localLikeState[postId],
       "서버상태:",

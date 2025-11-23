@@ -20,6 +20,7 @@ import { useApplyInit } from "../../hooks/apply/useCustomQusetion";
 
 // ⬇️ 추가: 지역 옵션 변환 유틸
 import { mapServerRegionsToOptions } from "../../utils/apply/mappingRegions";
+import { showError } from "../../utils/toast";
 
 type SelectedFlags = {
   category: 0 | 1;
@@ -216,7 +217,7 @@ export default function ApplicationForm({
             const msg =
               err?.response?.data?.message ||
               "지원에 실패했습니다. 잠시 후 다시 시도해주세요.";
-            alert(msg);
+            showError(msg);
           }
         }}
       />

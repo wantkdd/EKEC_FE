@@ -1,5 +1,7 @@
+import { logger } from "../../utils/logger";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likeBulletinApi, unlikeBulletinApi } from "../../apis/bulletins";
+import type { BulletinApiData } from "../../types/bulletin/types";
 
 // 좋아요 추가
 export function useLikeBulletin(crewId: string) {
@@ -9,7 +11,7 @@ export function useLikeBulletin(crewId: string) {
     mutationFn: (postId: string) => likeBulletinApi(crewId, postId),
 
     onMutate: async (postId: string) => {
-      console.log("💙 게시글 좋아요 추가 시작");
+      logger.debug("💙 게시글 좋아요 추가 시작");
 
       // 기존 쿼리 취소
       await queryClient.cancelQueries({
@@ -27,11 +29,14 @@ export function useLikeBulletin(crewId: string) {
       if (previousData) {
         queryClient.setQueryData(
           ["bulletin", parseInt(crewId), parseInt(postId)],
-          (old: any) => ({
-            ...old,
-            likeCount: (old.likeCount || 0) + 1,
-            isLiked: true,
-          })
+          (old: BulletinApiData | undefined) => {
+            if (!old) return old;
+            return {
+              ...old,
+              likeCount: (old.likeCount || 0) + 1,
+              isLiked: true,
+            };
+          }
         );
       }
 
@@ -42,7 +47,7 @@ export function useLikeBulletin(crewId: string) {
       // 성공 시 isLiked를 true로 설정
       queryClient.setQueryData(
         ["bulletin", parseInt(crewId), parseInt(postId)],
-        (old: any) => {
+        (old: BulletinApiData | undefined) => {
           if (!old) return old;
           return {
             ...old,
@@ -59,7 +64,7 @@ export function useLikeBulletin(crewId: string) {
     },
 
     onError: (error, postId, context) => {
-      console.log("게시글 좋아요 추가 실패", error);
+      logger.debug("게시글 좋아요 추가 실패", error);
       // 이전 상태로 롤백
       if (context?.previousData) {
         queryClient.setQueryData(
@@ -71,7 +76,7 @@ export function useLikeBulletin(crewId: string) {
       // 에러가 발생하면 isLiked를 false로 설정 (중복 클릭 방지)
       queryClient.setQueryData(
         ["bulletin", parseInt(crewId), parseInt(postId)],
-        (old: any) => {
+        (old: BulletinApiData | undefined) => {
           if (!old) return old;
           return {
             ...old,
@@ -107,11 +112,14 @@ export function useUnlikeBulletin(crewId: string) {
       if (previousData) {
         queryClient.setQueryData(
           ["bulletin", parseInt(crewId), parseInt(postId)],
-          (old: any) => ({
-            ...old,
-            likeCount: Math.max((old.likeCount || 0) - 1, 0),
-            isLiked: false,
-          })
+          (old: BulletinApiData | undefined) => {
+            if (!old) return old;
+            return {
+              ...old,
+              likeCount: Math.max((old.likeCount || 0) - 1, 0),
+              isLiked: false,
+            };
+          }
         );
       }
 
@@ -122,7 +130,7 @@ export function useUnlikeBulletin(crewId: string) {
       // 성공 시 isLiked를 false로 설정
       queryClient.setQueryData(
         ["bulletin", parseInt(crewId), parseInt(postId)],
-        (old: any) => {
+        (old: BulletinApiData | undefined) => {
           if (!old) return old;
           return {
             ...old,
@@ -140,7 +148,7 @@ export function useUnlikeBulletin(crewId: string) {
     },
 
     onError: (error, postId, context) => {
-      console.log("게시글 좋아요 취소 실패", error);
+      logger.debug("게시글 좋아요 취소 실패", error);
       // 이전 상태로 롤백
       if (context?.previousData) {
         queryClient.setQueryData(
@@ -152,7 +160,7 @@ export function useUnlikeBulletin(crewId: string) {
       // 에러가 발생하면 isLiked를 true로 설정
       queryClient.setQueryData(
         ["bulletin", parseInt(crewId), parseInt(postId)],
-        (old: any) => {
+        (old: BulletinApiData | undefined) => {
           if (!old) return old;
           return {
             ...old,

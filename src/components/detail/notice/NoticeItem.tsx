@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { logger } from "../../../utils/logger";
 import type { NoticeItemProps } from "../../../types/notice/types";
 import iconHeart from "../../../assets/schedule/ic_Heart.svg";
 
@@ -12,13 +13,13 @@ const NoticeItem: React.FC<NoticeItemProps> = ({
       e.preventDefault();
       e.stopPropagation();
 
-      console.log("NoticeItem 클릭됨:", notice);
-      console.log("onNoticeClick 함수 존재:", !!onNoticeClick);
+      logger.debug("NoticeItem 클릭됨:", notice);
+      logger.debug("onNoticeClick 함수 존재:", !!onNoticeClick);
 
       if (onNoticeClick) {
         onNoticeClick(notice);
       } else {
-        console.error("onNoticeClick 함수가 전달되지 않았습니다");
+        logger.error("onNoticeClick 함수가 전달되지 않았습니다");
       }
     },
     [notice, onNoticeClick]
@@ -34,7 +35,7 @@ const NoticeItem: React.FC<NoticeItemProps> = ({
     [handleClick]
   );
 
-  console.log("Notice item render - index:", index, "notice:", notice);
+  logger.debug("Notice item render - index:", index, "notice:", notice);
 
   return (
     <div

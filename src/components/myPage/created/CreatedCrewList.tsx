@@ -1,4 +1,5 @@
 import InfiniteScroll from "react-infinite-scroll-component";
+import { logger } from "../../../utils/logger";
 import CrewCard from "../CrewCard";
 import { useCreatedCrews } from "../../../hooks/createdCrew/useCreatedCrew";
 import noIcon from "../../../assets/icons/img_graphic3_340.svg";
@@ -16,8 +17,8 @@ export default function CreatedCrewList() {
     return <p className="text-center text-red-400 mt-12">{error}</p>;
   }
 
-  console.log("컴포넌트에서 확인:", { crews, loading, error, hasMore });
-  console.log("crews 배열 길이:", crews?.length);
+  logger.debug("컴포넌트에서 확인:", { crews, loading, error, hasMore });
+  logger.debug("crews 배열 길이:", crews?.length);
 
   //  빈 데이터 상태
   if (!crews || crews.length === 0) {
@@ -49,8 +50,8 @@ export default function CreatedCrewList() {
     >
       <div className="flex flex-col gap-4">
         {crews.map((crew) => {
-          console.log("각 크루 확인:", crew);
-          console.log("roleLabel 값:", crew.roleLabel);
+          logger.debug("각 크루 확인:", crew);
+          logger.debug("roleLabel 값:", crew.roleLabel);
           return (
             <CrewCard
               key={crew.id}

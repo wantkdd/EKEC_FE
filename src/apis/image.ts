@@ -1,3 +1,5 @@
+import { logger } from "../utils/logger";
+
 export interface ImageLoadParams {
   type: string; // 0: 배너, 1: 프로필, 2: 게시글, 3: 앨범
   fileName: string;
@@ -48,7 +50,7 @@ export const loadImage = async (params: ImageLoadParams): Promise<string> => {
 
     return imageUrl;
   } catch (error) {
-    console.error("이미지 로드 실패:", error);
+    logger.error("이미지 로드 실패", error);
     throw error;
   }
 };

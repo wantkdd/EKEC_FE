@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from "../../../utils/logger";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import EkecLogo from "../../../assets/icons/ic_logo_graphic_45.svg";
@@ -51,7 +52,7 @@ const SignUpForm = () => {
       });
     } catch (error) {
       // 에러는 useSignUp 훅에서 처리됨
-      console.error("회원가입 실패:", error);
+      logger.error("회원가입 실패:", error);
     }
   };
 

@@ -24,14 +24,17 @@ const TitleInput: React.FC<TitleInputProps> = ({
   return (
     <>
       <div className="font-bold mb-2">
-        제목 입력<span className="text-red-500 text-base">*</span>
+        제목 입력<span className="text-red-500 text-base" aria-label="필수">*</span>
       </div>
       <input
+        id="post-title"
         type="text"
         placeholder="제목을 입력해주세요"
         className="w-full border border-[#5e6068] p-2 rounded mb-4"
         value={title}
         onChange={handleChange}
+        aria-required="true"
+        aria-label="게시글 제목"
       />
     </>
   );

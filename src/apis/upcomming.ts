@@ -1,4 +1,4 @@
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
 
 // 타입 인터페이스 정의
 interface Crew {

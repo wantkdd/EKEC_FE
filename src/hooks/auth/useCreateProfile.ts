@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import { refreshApi, createProfileApi } from "../../apis/auth";
@@ -7,6 +8,7 @@ import type {
   RequestCreateProfile,
 } from "../../types/auth/types";
 import { useAuthStore } from "../../store/useAuthStore";
+import { showError } from "../../utils/toast";
 
 export const useCreateProfile = () => {
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ export const useCreateProfile = () => {
       navigate("/?showCompleteModal=true");
     },
     onError: (error) => {
-      console.error("프로필 생성 오류:", error);
+      logger.error("프로필 생성 오류:", error);
 
       let errorMessage = "프로필 생성 중 오류가 발생했습니다.";
       if (error.message.includes("토큰")) {
@@ -51,7 +53,7 @@ export const useCreateProfile = () => {
         errorMessage = "프로필 설정 실패"; //세부 오류 메세지 추가
       }
 
-      alert(errorMessage);
+      showError(errorMessage);
     },
   });
 };

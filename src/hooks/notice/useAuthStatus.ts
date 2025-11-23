@@ -1,6 +1,6 @@
 // hooks/useAuthStatus.ts
 import { useQuery } from "@tanstack/react-query";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 
 export const useAuthStatus = () => {
   return useQuery({
@@ -14,9 +14,12 @@ export const useAuthStatus = () => {
           isLoggedIn: data?.resultType === "SUCCESS",
           user: data?.data ?? null,
         };
-      } catch (e: any) {
-        if (e?.response?.status === 401)
-          return { isLoggedIn: false, user: null };
+      } catch (e: unknown) {
+        if (e && typeof e === 'object' && 'response' in e) {
+          const error = e as { response?: { status?: number } };
+          if (error.response?.status === 401)
+            return { isLoggedIn: false, user: null };
+        }
         return { isLoggedIn: false, user: null };
       }
     },

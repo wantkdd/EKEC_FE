@@ -1,5 +1,6 @@
 import type { CrewMember, CrewRole } from "../types/detail/crewMember";
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
+import { logger } from "../utils/logger";
 
 interface CrewMemberResponse {
   members: CrewMember[];
@@ -21,11 +22,10 @@ export const updateMemberRole = async (
   memberId: number,
   newRole: number
 ) => {
-  console.log(
-    "요청 보내는 URL 확인:",
-    `/crew/${crewId}/member/${memberId}/role`
-  );
-  console.log("보낼 데이터:", { role: newRole });
+  logger.debug("요청 보내는 URL 확인", {
+    url: `/crew/${crewId}/member/${memberId}/role`,
+  });
+  logger.debug("보낼 데이터", { role: newRole });
 
   const res = await privateAPI.put(`/crew/${crewId}/member/${memberId}/role`, {
     role: newRole,

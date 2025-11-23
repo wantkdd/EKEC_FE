@@ -1,6 +1,6 @@
 // hooks/useMyCrewRole.ts
 import { useQuery } from "@tanstack/react-query";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 import type { CrewRole } from "../../types/detail/crewMember";
 import { AxiosError } from "axios";
 

@@ -1,4 +1,5 @@
 import { FormProvider, useForm, Controller } from "react-hook-form";
+import { logger } from "../../utils/logger";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
@@ -12,7 +13,7 @@ import Modal from "../../components/common/Modal";
 import ableBtn from "../../assets/signIn/btn_login_520x68.svg";
 import disabledBtn from "../../assets/buttons/disabled.svg";
 import { useAuthStore } from "../../store/useAuthStore";
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 import successIcon from "../../assets/icons/img_graphic2_340.svg";
 import failIcon from "../../assets/icons/img_graphic3_340.svg";
 
@@ -111,8 +112,8 @@ export default function EditProfilePage() {
   const [isNotDefine, setIsNotDefine] = useState(user?.gender === 0); // 0: 밝히지 않음
   const watchedValues = watch();
 
-  console.log("watchedValues", watchedValues);
-  console.log("validation", editProfileSchema.safeParse(watchedValues));
+  logger.debug("watchedValues", watchedValues);
+  logger.debug("validation", editProfileSchema.safeParse(watchedValues));
 
   // validation을 기존 스키마에 맞춰서 수정
   const isValid = editProfileSchema.safeParse({
@@ -288,7 +289,7 @@ export default function EditProfilePage() {
           {/* 전화번호 */}
           <PhoneNumEdit
             onPassClick={(carrier, phone) => {
-              console.log("PASS 인증 요청:", carrier, phone);
+              logger.debug("PASS 인증 요청:", carrier, phone);
             }}
           />
 

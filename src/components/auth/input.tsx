@@ -17,6 +17,11 @@ interface InputProps {
   onRightButtonClick?: () => void;
   rightButtonDisabled?: boolean;
   register?: any;
+
+  //접근성을 위한 props
+  ariaLabel?: string;
+  ariaDescribedBy?: string;
+  ariaInvalid?: boolean;
 }
 
 const Input: React.FC<InputProps> = ({
@@ -32,6 +37,9 @@ const Input: React.FC<InputProps> = ({
   onRightButtonClick,
   rightButtonDisabled,
   register,
+  ariaLabel,
+  ariaDescribedBy,
+  ariaInvalid = false,
 }) => {
   const isPasswordType = type === "password";
   const inputType = isPasswordType && showPassword ? "text" : type;
@@ -54,22 +62,34 @@ const Input: React.FC<InputProps> = ({
         value={value}
         onChange={onChange}
         disabled={disabled}
+        aria-label={ariaLabel}
+        aria-describedby={ariaDescribedBy}
+        aria-invalid={ariaInvalid}
         className={`w-full h-full rounded-[10px] px-4 ${
           isPasswordType ? "pr-12" : ""
-        } text-lg focus:outline-none 
+        } text-lg focus:outline-none
         ${disabled ? "bg-gray-100 cursor-not-allowed" : ""}`}
       />
 
       {isPasswordType && togglePassword && (
-        <img
-          src={showPassword ? EyeIcon : EyeOffIcon}
-          alt={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
-          className={`absolute right-4 top-1/2 transform -translate-y-1/2 w-6 h-6 
-            ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+        <button
+          type="button"
+          aria-label={showPassword ? "비밀번호 숨기기" : "비밀번호 보기"}
           onClick={() => {
             if (!disabled) togglePassword();
           }}
-        />
+          disabled={disabled}
+          className={`absolute right-4 top-1/2 transform -translate-y-1/2 p-0 bg-none border-none ${
+            disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+          }`}
+        >
+          <img
+            src={showPassword ? EyeIcon : EyeOffIcon}
+            alt=""
+            aria-hidden="true"
+            className="w-6 h-6"
+          />
+        </button>
       )}
 
       {/* PASS 버튼 (오른쪽) */}
@@ -78,7 +98,8 @@ const Input: React.FC<InputProps> = ({
           type="button"
           disabled={rightButtonDisabled}
           onClick={onRightButtonClick}
-          className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-xl font-bold text-white text-sm 
+          aria-label={rightButtonLabel}
+          className={`absolute right-2 top-1/2 -translate-y-1/2 rounded-xl font-bold text-white text-sm
       flex items-center justify-center transition
       ${
         rightButtonDisabled

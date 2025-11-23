@@ -1,6 +1,8 @@
+import { logger } from "../../utils/logger";
 // src/hooks/useCrewMember/useKickCrewMember.ts
 import { kickCrewMember } from "../../apis/crewMember";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { showError } from "../../utils/toast";
 
 export const useKickCrewMember = (crewId: number) => {
   const queryClient = useQueryClient();
@@ -12,8 +14,8 @@ export const useKickCrewMember = (crewId: number) => {
       queryClient.invalidateQueries({ queryKey: ["crewMembers", crewId] });
     },
     onError: (error) => {
-      console.error("멤버 방출 중 오류 발생:", error);
-      alert("멤버 방출에 실패했습니다.");
+      logger.error("멤버 방출 중 오류 발생:", error);
+      showError("멤버 방출에 실패했습니다.");
     },
   });
 };

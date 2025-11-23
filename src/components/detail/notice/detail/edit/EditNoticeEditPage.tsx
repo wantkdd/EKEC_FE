@@ -7,6 +7,7 @@ import { getNoticeDetail, updateNotice } from "../../constants";
 import TitleInput from "../../PostForm/TitleInput";
 import ContentInput from "../../PostForm/ContentInput";
 import SubmitButton from "../../PostForm/SubmitButton";
+import { showError } from "../../../../../utils/toast";
 
 export default function NoticeEditPage() {
   const navigate = useNavigate();
@@ -42,18 +43,24 @@ export default function NoticeEditPage() {
 
   const handleSubmit = async () => {
     if (!crewId || !noticeId) return;
-    if (!title.trim()) return alert("제목을 입력해주세요.");
-    if (!content.trim()) return alert("내용을 입력해주세요.");
+    if (!title.trim()) {
+      showError("제목을 입력해주세요.");
+      return;
+    }
+    if (!content.trim()) {
+      showError("내용을 입력해주세요.");
+      return;
+    }
 
     try {
       const res = await updateNotice(crewId, noticeId, { title, content });
       if (res.resultType === "SUCCESS") {
         navigate(`/crew/${crewId}/notice/${noticeId}`);
       } else {
-        alert(res.message || "수정에 실패했습니다.");
+        showError(res.message || "수정에 실패했습니다.");
       }
     } catch (e: any) {
-      alert(e.message || "수정 중 오류가 발생했습니다.");
+      showError(e.message || "수정 중 오류가 발생했습니다.");
     }
   };
 

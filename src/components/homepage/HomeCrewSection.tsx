@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { logger } from "../../utils/logger";
 import CrewCard from "./CrewCard";
 import type { Crew } from "./CrewCard";
 import CrewSelector from "./CrewSelector";
 import { useNavigate } from "react-router-dom";
 import HomeCrewSectionSkeleton from "./HomeCrewSectionSkeleton";
 import { useQuery } from "@tanstack/react-query";
-import { API } from "../../apis/axios";
+import { API } from '../../apis/httpClient';
 import { buildFreshQS } from "../../utils/crewFilter/buildCrewListQs";
 
 export default function HomeCrewSection() {
@@ -23,7 +24,7 @@ export default function HomeCrewSection() {
     },
   });
 
-  console.log("isLoading:", isLoading, "data:", data);
+  logger.debug("isLoading:", isLoading, "data:", data);
 
   if (isLoading) return <HomeCrewSectionSkeleton />;
 
@@ -44,7 +45,7 @@ export default function HomeCrewSection() {
     };
   });
 
-  console.log("최종 mappedCrews:", mappedCrews);
+  logger.debug("최종 mappedCrews:", mappedCrews);
 
   // 탭에 따라 라벨/정렬
   const isPopular = selectedTab === "popular";

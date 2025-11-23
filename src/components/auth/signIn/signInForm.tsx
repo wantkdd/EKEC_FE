@@ -36,12 +36,13 @@ const SignInForm = ({ showOAuthError = false }: SignInFormProps) => {
         style={{ paddingLeft: "7.5%", paddingRight: "7.5%" }}
       >
         <div className="relative">
-          <AuthBtn onClick={handleEkecSignIn} hasLeftIcon={true}>
+          <AuthBtn onClick={handleEkecSignIn} hasLeftIcon={true} aria-label="EKEC ID로 로그인하기">
             EKEC ID로 계속하기
           </AuthBtn>
           <img
             src={Ekec}
-            alt="EKEC 로고"
+            alt=""
+            aria-hidden="true"
             className="absolute left-5 top-1/2 transform -translate-y-1/2 pointer-events-none"
           />
         </div>

@@ -3,6 +3,7 @@ import iconLikedHeart from "../../../../assets/icons/ic_liked_heart.svg";
 import iconComment from "../../../../assets/icons/ic_comment.svg";
 import iconShare from "../../../../assets/schedule/ic_Share.svg";
 import { useEffect, useMemo, useState } from "react";
+import { showError } from "../../../../utils/toast";
 
 type Props = {
   isCommentOpen: boolean;
@@ -71,7 +72,7 @@ const NoticeAction = ({
       // 실패 시 롤백
       setLiked(initialLiked); // 원래 서버 상태로 복원
       setLikeCount((c) => Math.max(0, c - 1));
-      alert("좋아요 처리에 실패했습니다.");
+      showError("좋아요 처리에 실패했습니다.");
     } finally {
       setSending(false);
     }

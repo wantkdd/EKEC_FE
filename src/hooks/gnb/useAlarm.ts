@@ -1,4 +1,4 @@
-import { privateAPI } from "../../apis/axios";
+import { privateAPI } from '../../apis/httpClient';
 import type {
   EnhancedAlarm,
   Alarm,
@@ -6,6 +6,7 @@ import type {
   MarkAsReadResponse,
 } from "../../types/alarm/types";
 import { useState, useEffect, useCallback } from "react";
+import { logger } from "../../utils/logger";
 
 const useAlarm = () => {
   const [alarms, setAlarms] = useState<EnhancedAlarm[]>([]);
@@ -81,13 +82,13 @@ const useAlarm = () => {
 
         if (result.resultType === "SUCCESS") {
           // ✨ 데이터 검증 및 로그
-          console.log("받은 알람 데이터:", result.data.alarms);
+          logger.debug("받은 알람 데이터", { alarms: result.data.alarms });
 
           result.data.alarms.forEach((alarm) => {
             if (!alarm.crew || !alarm.crew.id) {
-              console.warn("크루 정보가 없는 알람:", alarm);
+              logger.warn("크루 정보가 없는 알람", { alarm });
             } else {
-              console.log(
+              logger.debug(
                 `알람 ID ${alarm.id} - 크루 ID: ${alarm.crew.id}, 크루명: ${alarm.crew.name}`
               );
             }
@@ -104,9 +105,9 @@ const useAlarm = () => {
             }));
 
           // ✨ 필터링 후 데이터 로그
-          console.log("필터링된 알람 개수:", alarmsWithMessages.length);
+          logger.debug("필터링된 알람 개수", { count: alarmsWithMessages.length });
           alarmsWithMessages.forEach((alarm) => {
-            console.log(
+            logger.debug(
               `필터링된 알람 - ID: ${alarm.id}, 타입: ${alarm.type}, 크루: ${alarm.crew?.name}`
             );
           });
@@ -123,10 +124,15 @@ const useAlarm = () => {
         } else {
           setError(result.error || "알람을 불러오는데 실패했습니다.");
         }
-      } catch (err: any) {
-        console.error("알람 API 호출 에러:", err);
-        if (err.response?.status === 401) {
-          setError("로그인이 필요합니다.");
+      } catch (err: unknown) {
+        logger.error("알람 API 호출 에러", err);
+        if (err && typeof err === 'object' && 'response' in err) {
+          const error = err as { response?: { status?: number } };
+          if (error.response?.status === 401) {
+            setError("로그인이 필요합니다.");
+          } else {
+            setError("네트워크 오류가 발생했습니다.");
+          }
         } else {
           setError("네트워크 오류가 발생했습니다.");
         }
@@ -148,11 +154,11 @@ const useAlarm = () => {
 
     // ✨ crewId가 없는 경우 방어 코드
     if (!crewId) {
-      console.warn("알람에 크루 ID가 없습니다:", alarm);
+      logger.warn("알람에 크루 ID가 없습니다", { alarm });
       return "/"; // 홈페이지로 리다이렉트
     }
 
-    console.log(`경로 생성 - 알람 타입: ${alarm.type}, 크루 ID: ${crewId}`);
+    logger.debug(`경로 생성 - 알람 타입: ${alarm.type}, 크루 ID: ${crewId}`);
 
     switch (alarm.type) {
       case "CREW_JOIN_REQUEST":
@@ -167,7 +173,7 @@ const useAlarm = () => {
       case "NOTICE_CREATED":
         // 공지사항 생성 → 특정 공지사항 페이지
         if (alarm.noticeId) {
-          console.log(
+          logger.debug(
             `공지사항 경로: /crew/${crewId}/notice/${alarm.noticeId}`
           );
           return `/crew/${crewId}/notice/${alarm.noticeId}`;
@@ -177,7 +183,7 @@ const useAlarm = () => {
       case "SCHEDULE_CREATED":
         // 일정 생성 → 특정 일정 페이지
         if (alarm.planId) {
-          console.log(`일정 경로: /crew/${crewId}/schedule/${alarm.planId}`);
+          logger.debug(`일정 경로: /crew/${crewId}/schedule/${alarm.planId}`);
           return `/crew/${crewId}/schedule/${alarm.planId}`;
         }
         return `/crew/${crewId}/schedule`;
@@ -186,7 +192,7 @@ const useAlarm = () => {
       case "POST_COMMENTED":
         // 게시글 좋아요/댓글 → 특정 게시글 페이지
         if (alarm.postId) {
-          console.log(`게시글 경로: /crew/${crewId}/bulletin/${alarm.postId}`);
+          logger.debug(`게시글 경로: /crew/${crewId}/bulletin/${alarm.postId}`);
           return `/crew/${crewId}/bulletin/${alarm.postId}`;
         }
         return `/crew/${crewId}/bulletin`;
@@ -198,21 +204,21 @@ const useAlarm = () => {
 
       default:
         // 기본값 → 크루 메인 페이지
-        console.log(`기본 경로: /crew/${crewId}`);
+        logger.debug(`기본 경로: /crew/${crewId}`);
         return `/crew/${crewId}`;
     }
   }, []);
 
   // 알람 읽음 처리 - 읽은 알람은 목록에서 제거
   const markAsRead = useCallback(async (alarmId: number): Promise<void> => {
-    console.log("읽음 처리 시작 - 알람 ID:", alarmId);
+    logger.debug("읽음 처리 시작 - 알람 ID", { alarmId });
     try {
       const response = await privateAPI.patch<MarkAsReadResponse>(
         `/alarm/${alarmId}`
       );
 
       if (response.data.resultType === "SUCCESS") {
-        console.log("알람 읽음 처리 성공:", response.data.data?.id);
+        logger.debug("알람 읽음 처리 성공", { id: response.data.data?.id });
 
         // ✨ 읽은 알람은 목록에서 완전히 제거
         setAlarms((prev) => prev.filter((alarm) => alarm.id !== alarmId));
@@ -220,10 +226,10 @@ const useAlarm = () => {
         // 읽지 않은 개수 감소
         setUnreadCount((prev) => Math.max(0, prev - 1));
       } else {
-        console.error("알람 읽음 처리 실패:", response.data.error);
+        logger.error("알람 읽음 처리 실패", undefined, { error: response.data.error });
       }
-    } catch (err: any) {
-      console.error("알람 읽음 처리 API 에러:", err);
+    } catch (err: unknown) {
+      logger.error("알람 읽음 처리 API 에러", err);
     }
   }, []);
 

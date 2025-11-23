@@ -7,7 +7,8 @@ import type {
   AppliedListSuccess,
   ApplyRequestBody,
 } from "../types/apply/types";
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
+import { logger } from "../utils/logger";
 
 //승인 거부 props
 export interface ApprovalRequest {
@@ -16,7 +17,7 @@ export interface ApprovalRequest {
 
 export interface ApprovalResponse {
   resultType: "SUCCESS" | "ERROR";
-  error: any;
+  error: { errorCode?: string; reason?: string; data?: unknown } | null;
   success: {
     message: string;
     updated: {
@@ -28,7 +29,10 @@ export interface ApprovalResponse {
 export const getApplyInit = async (crewId: number): Promise<ApiSuccess> => {
   const res = await privateAPI.get<ApiResponse>(`/crew/apply/${crewId}/apply`);
   if (res.data.resultType !== "SUCCESS") {
-    throw new Error(res.data.error ?? "질문/조건 조회 실패");
+    const errorMsg = typeof res.data.error === 'string'
+      ? res.data.error
+      : res.data.error?.reason ?? "질문/조건 조회 실패";
+    throw new Error(errorMsg);
   }
   return res.data.success; // { step1, step2, recruitMessage }
 };
@@ -61,7 +65,7 @@ export const crewApplyAPI = {
     data: ApprovalRequest
   ): Promise<ApprovalResponse> => {
     try {
-      console.log("📤 요청:", {
+      logger.debug("요청", {
         url: `/crew/apply/${crewId}/apply/${applyId}`,
         data,
       });
@@ -69,21 +73,26 @@ export const crewApplyAPI = {
         `/crew/apply/${crewId}/apply/${applyId}`,
         data
       );
-      console.log("📥 응답:", response.data);
+      logger.debug("응답", { responseData: response.data });
       return response.data;
-    } catch (error: any) {
-      console.log("❌ 에러 상세:", error.response?.data);
+    } catch (error: unknown) {
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: { resultType?: string; error?: { reason?: string } } }; message?: string };
+        logger.debug("에러 상세", { errorData: axiosError.response?.data });
 
-      // 서버에서 FAIL 응답이 온 경우 (비즈니스 로직 에러)
-      // 그냥 원본 에러를 그대로 던지기
-      if (error.response?.data?.resultType === "FAIL") {
-        const serverError = error.response.data.error;
-        const errorMessage =
-          serverError?.reason || "처리 중 오류가 발생했습니다.";
+        // 서버에서 FAIL 응답이 온 경우 (비즈니스 로직 에러)
+        // 그냥 원본 에러를 그대로 던지기
+        if (axiosError.response?.data?.resultType === "FAIL") {
+          const serverError = axiosError.response.data.error;
+          const errorMessage =
+            serverError?.reason || "처리 중 오류가 발생했습니다.";
 
-        // 원본 에러의 message만 바꾸기
-        error.message = errorMessage;
-        throw error;
+          // 원본 에러의 message만 바꾸기
+          (error as { message?: string }).message = errorMessage;
+          throw error;
+        }
+      } else {
+        logger.debug("에러 상세", { error });
       }
 
       // 그 외의 네트워크 에러나 다른 에러들
@@ -128,7 +137,7 @@ export const getCrewInfo = async (
     );
     return response.data;
   } catch (error) {
-    console.error("크루 정보 조회 실패:", error);
+    logger.error("크루 정보 조회 실패", error);
     throw error;
   }
 };

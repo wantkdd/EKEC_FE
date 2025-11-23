@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { showWarning } from "../../../../../utils/toast";
 
 interface ImageAttachmentProps {
   onValueChange?: (files: File[]) => void;
@@ -19,7 +20,7 @@ const ImageAttachment: React.FC<ImageAttachmentProps> = ({ onValueChange, initia
     if (selectedFiles.length + files.length <= 5) {
       setSelectedFiles([...selectedFiles, ...files]);
     } else {
-      alert('최대 5개까지만 첨부할 수 있습니다.');
+      showWarning('최대 5개까지만 첨부할 수 있습니다.');
     }
   };
 

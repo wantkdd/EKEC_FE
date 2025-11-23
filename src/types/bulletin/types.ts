@@ -1,11 +1,11 @@
 // 기본 응답 타입
-export interface BaseApiResponse<T = any> {
+export interface BaseApiResponse<T = unknown> {
   resultType: "SUCCESS" | "FAIL" | "ERROR";
   error?:
     | {
         errorCode: string;
         reason: string;
-        data: any;
+        data: unknown;
       }
     | string
     | null;
@@ -125,7 +125,7 @@ export interface ResponseGetBulletinComments {
   error: null | {
     errorCode: string;
     reason: string;
-    data?: any;
+    data?: unknown;
   };
   data: {
     comments: BulletinCommentData[];
@@ -159,7 +159,7 @@ export interface ResponseCreateBulletinComment {
   error: null | {
     errorCode: string;
     reason: string;
-    data?: any;
+    data?: unknown;
   };
   data: CreatedBulletinCommentData | null;
 }

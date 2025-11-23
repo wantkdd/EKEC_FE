@@ -1,6 +1,10 @@
+import { logger } from "../../utils/logger";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createBulletinCommentApi } from "../../apis/bulletins";
-import type { RequestCreateBulletinComment } from "../../types/bulletin/types";
+import type {
+  RequestCreateBulletinComment,
+  BulletinApiData,
+} from "../../types/bulletin/types";
 
 export const useCreateBulletinComment = (crewId: string, postId: string) => {
   const queryClient = useQueryClient();
@@ -24,7 +28,7 @@ export const useCreateBulletinComment = (crewId: string, postId: string) => {
       // 낙관적 업데이트: 댓글 수 +1
       queryClient.setQueryData(
         ["bulletin", parseInt(crewId), parseInt(postId)],
-        (old: any) => {
+        (old: BulletinApiData | undefined) => {
           if (!old) return old;
           return {
             ...old,
@@ -57,7 +61,7 @@ export const useCreateBulletinComment = (crewId: string, postId: string) => {
           context.previousBulletinDetail
         );
       }
-      console.error("댓글 작성 실패:", error);
+      logger.error("댓글 작성 실패:", error);
     },
   });
 };

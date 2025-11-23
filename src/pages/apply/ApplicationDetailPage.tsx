@@ -11,6 +11,7 @@ import type { ApplyOption } from "../../types/apply/types";
 import { useApplicationDetail } from "../../hooks/apply/useAppicationDetail";
 import { mapSelectedValues } from "../../utils/apply/mapSelectedValues";
 import { mapServerRegionsToOptions } from "../../utils/apply/mappingRegions";
+import { showSuccess, showError } from "../../utils/toast";
 
 export default function ApplicationDetailPage() {
   // 1) params -> 숫자 변환 (항상 호출)
@@ -122,8 +123,8 @@ export default function ApplicationDetailPage() {
             <ApproveBtn
               crewId={crewId}
               applyId={applyId}
-              onSuccess={() => alert("처리 완료!")}
-              onError={(msg) => alert(msg)}
+              onSuccess={() => showSuccess("처리 완료!")}
+              onError={(msg) => showError(msg)}
             />
           </>
         )}

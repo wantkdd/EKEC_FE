@@ -31,10 +31,13 @@ export type QAViewItem =
     };
 
 /** detail 응답에서 answers 배열 꺼내기(키 명이 달라도 커버) */
-const extractAnswers = (detail: any): AnswerItem[] =>
-  (Array.isArray(detail?.answers) && detail.answers) ||
-  (Array.isArray(detail?.step2Answers) && detail.step2Answers) ||
-  [];
+const extractAnswers = (detail: unknown): AnswerItem[] => {
+  if (!detail || typeof detail !== 'object') return [];
+  const d = detail as Record<string, unknown>;
+  return (Array.isArray(d.answers) && d.answers) ||
+    (Array.isArray(d.step2Answers) && d.step2Answers) ||
+    [];
+};
 
 /** 답변에서 해당 질문 id와 매칭 (서버가 recruitFormId 또는 questionId를 쓸 수 있음) */
 const findAnswerByQuestionId = (answers: AnswerItem[], qid: number) =>
@@ -69,7 +72,7 @@ const toEtcText = (ans?: AnswerItem): string | null => {
 /** 최종 매핑 */
 export const mapStep2ToView = (
   questions: ApiQuestion[] = [],
-  detail: any
+  detail: unknown
 ): QAViewItem[] => {
   const answers = extractAnswers(detail);
 

@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { logger } from "../../../../utils/logger";
 import { useEffect, useRef, useState } from "react";
 import moreIcon from "../../../../assets/schedule/ic_More.svg";
+import { showSuccess, showError, showConfirm } from "../../../../utils/toast";
 
 type Comment = {
   id: number;
@@ -16,10 +18,7 @@ type Props = {
   onCommentCountChange?: (count: number) => void;
 };
 
-import { authorizedFetch } from "../../../../apis/client";
-import { privateAPI } from "../../../../apis/axios";
-
-const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, "") || "";
+import { privateAPI } from "../../../../apis/httpClient";
 
 /* 공통 유틸 */
 const enc = (v: string | number) => encodeURIComponent(String(v));
@@ -34,19 +33,22 @@ export const CONSTANTS = {
 
 /* 공지 목록 */
 export const fetchNoticeList = async (crewId: string, page = 1, size = 10) => {
-  const url = `${API_BASE}/crew/${enc(crewId)}/notice/?page=${enc(page)}&size=${enc(size)}`;
-  const res = await authorizedFetch(url, {
-    method: "GET",
-    headers: { Accept: "application/json" },
-    credentials: "include",
-  });
-  const json = await res.json().catch(() => null);
-  if (res.status >= 500) return [];
-  if (!res.ok || json?.resultType !== "SUCCESS") {
-    throw new Error(json?.error?.reason || `Notice list failed (${res.status})`);
+  try {
+    const url = `/crew/${enc(crewId)}/notice/?page=${enc(page)}&size=${enc(size)}`;
+    const { data, status } = await privateAPI.get(url, {
+      headers: { Accept: "application/json" },
+      withCredentials: true,
+    });
+    if (status >= 500) return [];
+    if (!ok(data)) {
+      throw new Error(data?.error?.reason || `Notice list failed (${status})`);
+    }
+    const d = data?.data;
+    return Array.isArray(d) ? d : d?.notices || [];
+  } catch (err: any) {
+    if (err?.response?.status >= 500) return [];
+    throw err;
   }
-  const d = json?.data;
-  return Array.isArray(d) ? d : d?.notices || [];
 };
 
 /* 공지 작성 */
@@ -79,17 +81,19 @@ export const createNotice = async (
 
 /* 내 역할 조회 (명세: { memberId, role }) */
 export const fetchMyRole = async (crewId: string) => {
-  const url = `${API_BASE}/crew/${enc(crewId)}/myrole/`;
-  const res = await authorizedFetch(url, {
-    method: "GET",
-    headers: { Accept: "application/json" },
-    credentials: "include",
-  });
-  if (res.status === 403) return { role: "GUEST" as const };
-  const json = await res.json().catch(() => null);
-  if (!res.ok || json?.resultType !== "SUCCESS")
-    throw new Error(json?.error?.reason || `MyRole failed (${res.status})`);
-  return json.data; // { memberId, role }
+  try {
+    const url = `/crew/${enc(crewId)}/myrole/`;
+    const { data } = await privateAPI.get(url, {
+      headers: { Accept: "application/json" },
+      withCredentials: true,
+    });
+    if (!ok(data))
+      throw new Error(data?.error?.reason || "MyRole failed");
+    return data.data; // { memberId, role }
+  } catch (err: any) {
+    if (err?.response?.status === 403) return { role: "GUEST" as const };
+    throw err;
+  }
 };
 
 /* 공지 삭제 */
@@ -125,15 +129,13 @@ export const toggleNoticeLike = async (crewId: string, noticeId: string) => {
 
 /* 공지 상세 */
 export const getNoticeDetail = async (crewId: string, noticeId: string) => {
-  const url = `${API_BASE}/crew/${enc(crewId)}/notice/${enc(noticeId)}/`;
-  const res = await authorizedFetch(url, {
-    method: "GET",
+  const url = `/crew/${enc(crewId)}/notice/${enc(noticeId)}/`;
+  const { data } = await privateAPI.get(url, {
     headers: { Accept: "application/json" },
-    credentials: "include",
+    withCredentials: true,
   });
-  const json = await res.json().catch(() => null);
-  if (!res.ok) throw new Error(json?.error?.reason || `Notice detail failed (${res.status})`);
-  return json;
+  if (!ok(data)) throw new Error(data?.error?.reason || "Notice detail failed");
+  return data;
 };
 
 /* 댓글 목록 ( /comment/ → 실패 시 /comments/ 폴백 ) */
@@ -297,7 +299,7 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
         setError("댓글을 불러오는데 실패했습니다.");
       }
     } catch (err) {
-      console.error("댓글 조회 에러:", err);
+      logger.error("댓글 조회 에러:", err);
       setError("댓글을 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
@@ -353,7 +355,7 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
       onCommentCountChange?.(comments.length + 1);
       setNewContent("");
     } catch (e: any) {
-      alert(e?.message ?? "댓글 작성에 실패했습니다.");
+      showError(e?.message ?? "댓글 작성에 실패했습니다.");
     } finally {
       setPosting(false);
     }
@@ -382,18 +384,18 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
       );
       cancelEdit();
     } catch (e: any) {
-      alert(e?.message ?? "댓글 수정에 실패했습니다.");
+      showError(e?.message ?? "댓글 수정에 실패했습니다.");
     }
   };
 
   const removeComment = async (id: number) => {
-    if (!confirm("이 댓글을 삭제할까요?")) return;
+    if (!(await showConfirm("이 댓글을 삭제할까요?"))) return;
     try {
       await deleteNoticeComment(crewId, noticeId, id);
       setComments((prev) => prev.filter((c) => c.id !== id));
       onCommentCountChange?.(comments.length - 1);
     } catch (e: any) {
-      alert(e?.message ?? "댓글 삭제에 실패했습니다.");
+      showError(e?.message ?? "댓글 삭제에 실패했습니다.");
     }
   };
 
@@ -501,7 +503,7 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
                             className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm"
                             onClick={() => {
                               setMenuOpenId(null);
-                              alert("신고가 접수되었습니다.");
+                              showSuccess("신고가 접수되었습니다.");
                             }}
                           >
                             신고하기
