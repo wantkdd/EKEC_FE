@@ -1,4 +1,4 @@
-import axios from "axios";
+import { authApi } from "./httpClient";
 import { authMeta } from "../utils/authMeta";
 import type {
   RequestCreateProfile,
@@ -9,14 +9,7 @@ import type {
   ResponseSignOut,
 } from "../types/auth/types";
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-export const authApi = axios.create({
-  baseURL: API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-  timeout: 10000,
-  withCredentials: true,
-});
 
 // 회원가입
 export const signUpApi = async (data: RequestSign): Promise<ResponseSign> => {

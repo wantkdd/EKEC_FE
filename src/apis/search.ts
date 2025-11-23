@@ -1,4 +1,4 @@
-import { API } from "./axios";
+import { API } from "./httpClient";
 // 자동완성 api
 
 type Crew = { name: string };

@@ -1,4 +1,4 @@
-import { API, privateAPI } from "./axios";
+import { API, privateAPI } from "./httpClient";
 
 export type AlbumListItem = {
 	albumId: number;

@@ -1,5 +1,5 @@
 import type { CrewMember, CrewRole } from "../types/detail/crewMember";
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
 
 interface CrewMemberResponse {
   members: CrewMember[];

@@ -1,6 +1,6 @@
 // src/api/profileApi.ts
 
-import { privateAPI } from "./axios";
+import { privateAPI } from "./httpClient";
 import { AxiosError } from "axios";
 
 // 타입 정의
