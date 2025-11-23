@@ -25,9 +25,9 @@ const ContentInput: React.FC<ContentInputProps> = ({
   }, [value]);
 
   return (
-    <div>
+    <div role="region" aria-label="게시글 본문 입력 영역">
       <div className="font-bold mb-2">
-        본문 입력<span className="text-red-500 text-base">*</span>
+        본문 입력<span className="text-red-500 text-base" aria-label="필수">*</span>
       </div>
       <div className="mb-6">
         <Editor
@@ -37,6 +37,7 @@ const ContentInput: React.FC<ContentInputProps> = ({
           useCommandShortcut
           hideModeSwitch={true}
           onChange={handleChange}
+          aria-label="게시글 본문 편집기"
           toolbarItems={[
             ["heading", "bold", "italic", "strike"],
             ["hr", "quote"],

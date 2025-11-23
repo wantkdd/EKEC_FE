@@ -36,6 +36,8 @@ export default function ProfileModal({ onClose, onMyPage }: Props) {
     <div
       ref={modalRef}
       className="fixed top-13 right-15 w-[9.5rem] bg-white rounded-xl shadow-2xl z-[9999]"
+      role="menu"
+      aria-label="프로필 메뉴"
     >
       <ProfileModalBtn
         label="마이페이지"

@@ -16,10 +16,12 @@ export default function Checkbox({ label, value, checked, onToggle }: Props) {
       className="flex items-center gap-2 hover:opacity-90 transition"
       role="checkbox"
       aria-checked={checked}
+      aria-label={label}
     >
       <img
         src={checked ? checkedIcon : uncheckedIcon}
-        alt={checked ? "선택됨" : "선택 안 됨"}
+        alt=""
+        aria-hidden="true"
         className="w-5 h-5"
       />
       <span>{label}</span>

@@ -25,11 +25,14 @@ export default function ProfileButton() {
     <>
       <button
         onClick={handleProfileClick}
+        aria-label={`${user?.nickname} 님의 프로필 메뉴 열기`}
+        aria-expanded={isOpen}
         className="flex w-[9.06rem] cursor-pointer h-12 items-center space-x-2 transition-transform duration-300 ease-in-out hover:scale-110"
       >
         <img
           src={profileSrc}
-          alt="프로필"
+          alt=""
+          aria-hidden="true"
           className="w-[1.625rem] h-[1.625rem] rounded-full object-cover"
         />
 

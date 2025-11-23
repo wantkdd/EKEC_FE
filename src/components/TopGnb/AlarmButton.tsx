@@ -58,18 +58,22 @@ export default function AlarmButton() {
       <div className="flex items-center gap-3">
         <button
           onClick={() => setOpen((prev) => !prev)}
+          aria-label={unreadCount > 0 ? `읽지 않은 알림 ${unreadCount}개` : "알림"}
+          aria-expanded={open}
+          aria-haspopup="true"
           className="text-xl cursor-pointer transition-transform duration-300 ease-in-out hover:scale-110"
         >
           <img
             src={unreadCount > 0 ? newAlarm : noAlarm}
-            alt="알람 아이콘"
+            alt=""
+            aria-hidden="true"
             className="w-9 h-9 object-contain align-middle"
             style={{ marginTop: "-2px" }}
           />
         </button>
 
         {unreadCount > 0 && (
-          <span className="bg-[#3A3ADB] text-white text-xs w-12 h-6 flex items-center justify-center rounded-2xl">
+          <span className="bg-[#3A3ADB] text-white text-xs w-12 h-6 flex items-center justify-center rounded-2xl" aria-live="polite">
             알림{unreadCount}
           </span>
         )}

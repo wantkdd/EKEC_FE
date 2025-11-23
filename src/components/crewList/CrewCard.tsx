@@ -36,13 +36,16 @@ const CrewCard = ({
     <div
       onClick={goDetail}
       onKeyDown={onKey}
+      role="button"
+      tabIndex={0}
+      aria-label={`${name} 크루 상세 페이지로 이동`}
       className="flex items-center w-full max-w-[1320px] h-auto bg-white rounded-xl border-2 border-[#D9DADD] p-4 hover:-translate-y-0.5 duration-300 hover:shadow-xl cursor-pointer"
     >
       {/* 배너 이미지 */}
       <div className="relative w-1/3 aspect-[3/2] rounded-lg overflow-hidden min-w-[280px] max-w-[360px]">
         <img
           src={bannerSrc}
-          alt="배너이미지"
+          alt={`${name} 크루 배너 이미지`}
           onError={(e) => {
             const img = e.currentTarget;
             if (img.src !== defaultBanner) {
@@ -55,7 +58,10 @@ const CrewCard = ({
 
         {/* 카테고리 태그 */}
         <div className="absolute top-3 left-3">
-          <span className="inline-block bg-[linear-gradient(135deg,#3A3ADB_0%,#3A3ADB_30%,#63BCEC_70%,#72EDF2_100%)] text-white text-xs sm:text-sm md:text-md lg:text-lg font-medium px-3 h-7 rounded-full whitespace-nowrap">
+          <span
+            className="inline-block bg-[linear-gradient(135deg,#3A3ADB_0%,#3A3ADB_30%,#63BCEC_70%,#72EDF2_100%)] text-white text-xs sm:text-sm md:text-md lg:text-lg font-medium px-3 h-7 rounded-full whitespace-nowrap"
+            aria-label={`카테고리: ${crewCategory}`}
+          >
             {crewCategory}
           </span>
         </div>
@@ -84,8 +90,10 @@ const CrewCard = ({
             {capacity == null || capacity === 0 ? "00" : capacity}
           </span>
           <span className="text-sm sm:text-base md:text-xl font-normal text-[#1A1B1E] flex items-center gap-2">
-            <img src={starIcon} alt="별점" />
-            {typeof score === "number" ? score.toFixed(1) : "0.0"}
+            <img src={starIcon} alt="" aria-hidden="true" />
+            <span aria-label={`별점: ${typeof score === "number" ? score.toFixed(1) : "0.0"}점`}>
+              {typeof score === "number" ? score.toFixed(1) : "0.0"}
+            </span>
           </span>
         </div>
 

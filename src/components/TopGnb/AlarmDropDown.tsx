@@ -22,21 +22,25 @@ export default function AlarmDropdown({
   onAlarmClick,
 }: Props) {
   return (
-    <div className="absolute top-[60px] right-0 w-[25rem] bg-[#F7F7FB] rounded-2xl shadow-md z-[9999]">
-      <div className="p-4 font-bold mb-3 bg-white sticky top-0 z-10">알림</div>
+    <div
+      className="absolute top-[60px] right-0 w-[25rem] bg-[#F7F7FB] rounded-2xl shadow-md z-[9999]"
+      role="menu"
+      aria-label="알림 목록"
+    >
+      <div id="alarm-header" className="p-4 font-bold mb-3 bg-white sticky top-0 z-10">알림</div>
 
       {loading && alarms.length === 0 && (
-        <div className="p-4 text-center text-gray-500">로딩 중...</div>
+        <div className="p-4 text-center text-gray-500" role="status">로딩 중...</div>
       )}
 
       {error && (
-        <div className="p-4 text-center text-red-500">
+        <div className="p-4 text-center text-red-500" role="alert">
           알림을 불러올 수 없습니다.
         </div>
       )}
 
       {!loading && !error && alarms.length === 0 && (
-        <div className="p-4 text-center text-gray-500">
+        <div className="p-4 text-center text-gray-500" role="status">
           새로운 알림이 없습니다.
         </div>
       )}
@@ -45,6 +49,7 @@ export default function AlarmDropdown({
         <ul
           className="max-h-80 overflow-y-scroll space-y-3"
           style={{ scrollbarWidth: "thin" }}
+          role="none"
         >
           {alarms.map((alarm) => (
             <AlarmItem

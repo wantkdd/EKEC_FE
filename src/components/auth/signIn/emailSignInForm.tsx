@@ -80,10 +80,13 @@ const EmailSignInForm: React.FC = () => {
                 type="email"
                 placeholder="이메일을 입력하세요"
                 register={register("email")}
+                ariaLabel="이메일 주소"
+                ariaDescribedBy={errors?.email ? "email-error" : undefined}
+                ariaInvalid={!!errors?.email}
               />
               {errors?.email && (
-                <div className="flex items-center justify-start text-[#ff4949] text-sm mt-1 mb-3 w-full">
-                  <img src={warnIcon} alt="경고" className="w-4 h-4 mr-2" />
+                <div id="email-error" className="flex items-center justify-start text-[#ff4949] text-sm mt-1 mb-3 w-full" role="alert">
+                  <img src={warnIcon} alt="" aria-hidden="true" className="w-4 h-4 mr-2" />
                   {errors.email.message}
                 </div>
               )}
@@ -96,25 +99,39 @@ const EmailSignInForm: React.FC = () => {
                 register={register("password")}
                 showPassword={showPassword}
                 togglePassword={handlePasswordToggle}
+                ariaLabel="비밀번호"
+                ariaDescribedBy={errors?.password ? "password-error" : undefined}
+                ariaInvalid={!!errors?.password}
               />
+              {errors?.password && (
+                <div id="password-error" className="flex items-center justify-start text-[#ff4949] text-sm mt-1 mb-3 w-full" role="alert">
+                  <img src={warnIcon} alt="" aria-hidden="true" className="w-4 h-4 mr-2" />
+                  {errors.password.message}
+                </div>
+              )}
             </div>
 
             <div className="mb-4 w-full ml-6">
-              <div
-                className="flex items-center cursor-pointer select-none"
-                onClick={handleCheckboxToggle}
-              >
-                <div className="w-5 h-5 relative mr-2 flex-shrink-0">
+              <label className="flex items-center cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={isAutoLogin}
+                  onChange={handleCheckboxToggle}
+                  className="sr-only"
+                  aria-label="자동 로그인"
+                />
+                <div className="w-5 h-5 relative mr-2 flex-shrink-0 pointer-events-none">
                   <img
                     src={isAutoLogin ? pressedCheckBoxIcon : checkBoxIcon}
-                    alt={isAutoLogin ? "체크박스 선택됨" : "체크박스"}
+                    alt=""
+                    aria-hidden="true"
                     className="w-full h-full"
                   />
                 </div>
-                <div className="text-neutral-400 text-sm md:text-lg font-medium">
+                <span className="text-neutral-400 text-sm md:text-lg font-medium">
                   자동 로그인
-                </div>
-              </div>
+                </span>
+              </label>
             </div>
 
             <AuthBtn type="submit" disabled={!isValid} className="mb-4">
@@ -124,15 +141,15 @@ const EmailSignInForm: React.FC = () => {
 
           {/* 하단 링크들 */}
           <div className="flex justify-center items-center space-x-2 sm:space-x-4 md:space-x-8 text-neutral-400 text-sm w-full">
-            <Link to="/findId" className="hover:underline">
+            <Link to="/findId" className="hover:underline" aria-label="아이디 찾기 페이지로 이동">
               아이디 찾기
             </Link>
-            <span className="text-neutral-300">|</span>
-            <Link to="/findPassword" className="hover:underline">
+            <span className="text-neutral-300" aria-hidden="true">|</span>
+            <Link to="/findPassword" className="hover:underline" aria-label="비밀번호 찾기 페이지로 이동">
               비밀번호 찾기
             </Link>
-            <span className="text-neutral-300">|</span>
-            <Link to="/signUp" className="hover:underline">
+            <span className="text-neutral-300" aria-hidden="true">|</span>
+            <Link to="/signUp" className="hover:underline" aria-label="회원가입 페이지로 이동">
               회원가입
             </Link>
           </div>
