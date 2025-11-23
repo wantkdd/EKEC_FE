@@ -1,4 +1,5 @@
 import CategoryBgImgs from "../CategoryBgImgs";
+import { logger } from "../../utils/logger";
 import logo from "../../assets/logo/ic_logo graphic_45.svg";
 import { useCrewInfo } from "../../hooks/apply/useCrewInfo";
 
@@ -12,10 +13,10 @@ const Header = ({ crewId }: Props) => {
   const { crewInfo, loading, error } = useCrewInfo(crewId);
 
   // 디버깅용 콘솔 로그
-  console.log("Header - crewId:", crewId);
-  console.log("Header - crewInfo:", crewInfo);
-  console.log("Header - loading:", loading);
-  console.log("Header - error:", error);
+  logger.debug("Header - crewId:", crewId);
+  logger.debug("Header - crewInfo:", crewInfo);
+  logger.debug("Header - loading:", loading);
+  logger.debug("Header - error:", error);
 
   // 로딩/에러 상태 처리
   if (loading) return <div>로딩 중...</div>;

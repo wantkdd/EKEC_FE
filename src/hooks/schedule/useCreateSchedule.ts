@@ -5,6 +5,8 @@ import type {
   RequestCreateSchedule,
   ResponseCreateSchedule,
 } from "../../types/detail/schedule/types";
+import { showSuccess, showError } from "../../utils/toast";
+import { logger } from "../../utils/logger";
 
 interface CreateScheduleParams {
   crewId: string;
@@ -19,7 +21,7 @@ export const useCreateSchedule = () => {
     mutationFn: ({ crewId, scheduleData }) =>
       createScheduleApi(crewId, scheduleData),
     onSuccess: (response, { crewId }) => {
-      console.log("일정 등록 성공:", response);
+      logger.debug("일정 등록 성공", { response });
 
       if (response.resultType === "SUCCESS") {
         // 일정 목록 캐시 무효화 (새로고침)
@@ -27,17 +29,17 @@ export const useCreateSchedule = () => {
           queryKey: ["scheduleList", crewId],
         });
 
-        alert("일정이 성공적으로 등록되었습니다!");
+        showSuccess("일정이 성공적으로 등록되었습니다!");
         // 일정 목록 페이지로 이동
         navigate(-1); // 이전 페이지로 돌아가기
       } else {
-        console.error("일정 등록 실패:", response.error);
-        alert(response.error?.reason || "일정 등록에 실패했습니다.");
+        logger.error("일정 등록 실패", undefined, { error: response.error });
+        showError(response.error?.reason || "일정 등록에 실패했습니다.");
       }
     },
     onError: (error) => {
-      console.error("일정 등록 오류:", error);
-      alert("일정 등록 중 오류가 발생했습니다.");
+      logger.error("일정 등록 오류", error);
+      showError("일정 등록 중 오류가 발생했습니다.");
     },
   });
 };

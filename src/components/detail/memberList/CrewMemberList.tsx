@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { logger } from "../../utils/logger";
 import axios from "axios";
 import { useMyCrewRole } from "../../../hooks/CrewMemberList/useMyCrewRole";
 import { useCrewMembers } from "../../../hooks/CrewMemberList/useCrewMember";
@@ -37,7 +38,7 @@ export default function CrewMemberList({
   useEffect(() => {
     // 멤버 목록 API 403 에러 체크
     if (error) {
-      console.log("🔍 CrewMembers Error:", error);
+      logger.debug("🔍 CrewMembers Error:", error);
       if (axios.isAxiosError(error) && error.response?.status === 403) {
         setShowForbiddenModal(true);
         return;
@@ -46,7 +47,7 @@ export default function CrewMemberList({
 
     // 내 역할 API 403 에러 체크
     if (roleError) {
-      console.log("🔍 MyCrewRole Error:", roleError);
+      logger.debug("🔍 MyCrewRole Error:", roleError);
       if (axios.isAxiosError(roleError) && roleError.response?.status === 403) {
         setShowForbiddenModal(true);
         return;

@@ -29,13 +29,13 @@ export const useScheduleLikeState = (
 
   const handleLikeToggle = () => {
     if (!crewId || !scheduleId) {
-      console.error("크루 ID 또는 일정 ID가 없습니다.");
+      logger.error("크루 ID 또는 일정 ID가 없습니다.");
       return;
     }
 
     const currentLikeStatus = localLikeState[scheduleId] ?? serverLikeStatus;
 
-    console.log(
+    logger.debug(
       "🔄 [LIKE ACTION] 로컬상태:",
       localLikeState[scheduleId],
       "서버상태:",

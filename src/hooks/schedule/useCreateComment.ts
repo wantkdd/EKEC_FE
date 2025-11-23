@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createCommentApi } from "../../apis/schedule";
-import type { RequestCreateComment } from "../../types/detail/schedule/types";
+import type {
+  RequestCreateComment,
+  ResponseScheduleDetail,
+} from "../../types/detail/schedule/types";
 
 export const useCreateComment = (crewId: string, planId: string) => {
   const queryClient = useQueryClient();
@@ -24,7 +27,7 @@ export const useCreateComment = (crewId: string, planId: string) => {
       // 낙관적 업데이트: 댓글 수 +1
       queryClient.setQueryData(
         ["scheduleDetail", crewId, planId],
-        (old: any) => {
+        (old: ResponseScheduleDetail | undefined) => {
           if (!old) return old;
           return {
             ...old,
@@ -56,7 +59,7 @@ export const useCreateComment = (crewId: string, planId: string) => {
           context.previousScheduleDetail
         );
       }
-      console.error("댓글 작성 실패:", error);
+      logger.error("댓글 작성 실패:", error);
     },
   });
 };

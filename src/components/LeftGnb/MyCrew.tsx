@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from "../../utils/logger";
 import { useNavigate } from "react-router-dom";
 import ToggleListButton from "./ToggleListButton";
 import userIconBk from "../../assets/icons/ic_UserCircle_36.svg";
@@ -45,7 +46,7 @@ const MyCrewButton = () => {
     const selectedCrewData = crews.find((crew) => crew.crewName === crewName);
 
     if (selectedCrewData) {
-      console.log("선택된 크루 ID:", selectedCrewData.crewId);
+      logger.debug("선택된 크루 ID:", selectedCrewData.crewId);
 
       // 해당 크루 페이지로 이동
       navigate(`/crew/${selectedCrewData.crewId}`);

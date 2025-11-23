@@ -1,4 +1,5 @@
 import React, { useCallback } from "react";
+import { logger } from "../../utils/logger";
 import isAttachedIcon from "../../../assets/icons/ic_isAttached.svg";
 import type { Bulletin } from "../../../types/bulletin/types";
 import iconHeart from "../../../assets/schedule/ic_Heart.svg";
@@ -17,7 +18,7 @@ const BulletinItem: React.FC<BulletinItemProps> = ({
     onBulletinClick?.(bulletin);
   }, [bulletin, onBulletinClick]);
 
-  console.log("Bulletin item index:", index);
+  logger.debug("Bulletin item index:", index);
 
   return (
     <div

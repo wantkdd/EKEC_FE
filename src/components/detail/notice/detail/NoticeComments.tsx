@@ -1,6 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { logger } from "../../utils/logger";
 import { useEffect, useRef, useState } from "react";
 import moreIcon from "../../../../assets/schedule/ic_More.svg";
+import { showSuccess, showError, showConfirm } from "../../utils/toast";
 
 type Comment = {
   id: number;
@@ -297,7 +299,7 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
         setError("댓글을 불러오는데 실패했습니다.");
       }
     } catch (err) {
-      console.error("댓글 조회 에러:", err);
+      logger.error("댓글 조회 에러:", err);
       setError("댓글을 불러오는데 실패했습니다.");
     } finally {
       setLoading(false);
@@ -353,7 +355,7 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
       onCommentCountChange?.(comments.length + 1);
       setNewContent("");
     } catch (e: any) {
-      alert(e?.message ?? "댓글 작성에 실패했습니다.");
+      showError(e?.message ?? "댓글 작성에 실패했습니다.");
     } finally {
       setPosting(false);
     }
@@ -382,18 +384,18 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
       );
       cancelEdit();
     } catch (e: any) {
-      alert(e?.message ?? "댓글 수정에 실패했습니다.");
+      showError(e?.message ?? "댓글 수정에 실패했습니다.");
     }
   };
 
   const removeComment = async (id: number) => {
-    if (!confirm("이 댓글을 삭제할까요?")) return;
+    if (!(await showConfirm("이 댓글을 삭제할까요?"))) return;
     try {
       await deleteNoticeComment(crewId, noticeId, id);
       setComments((prev) => prev.filter((c) => c.id !== id));
       onCommentCountChange?.(comments.length - 1);
     } catch (e: any) {
-      alert(e?.message ?? "댓글 삭제에 실패했습니다.");
+      showError(e?.message ?? "댓글 삭제에 실패했습니다.");
     }
   };
 
@@ -501,7 +503,7 @@ const NoticeComments = ({ isOpen, crewId, noticeId, onCommentCountChange }: Prop
                             className="w-full text-left px-4 py-2 hover:bg-gray-50 text-sm"
                             onClick={() => {
                               setMenuOpenId(null);
-                              alert("신고가 접수되었습니다.");
+                              showSuccess("신고가 접수되었습니다.");
                             }}
                           >
                             신고하기

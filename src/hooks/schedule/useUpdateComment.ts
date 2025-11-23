@@ -7,7 +7,7 @@ interface UseUpdateCommentParams {
   planId: string;
   commentId: number;
   onSuccess?: () => void;
-  onError?: (error: any) => void;
+  onError?: (error: Error) => void;
 }
 
 export const useUpdateComment = ({
@@ -31,7 +31,7 @@ export const useUpdateComment = ({
       onSuccess?.();
     },
     onError: (error) => {
-      console.error("[useUpdateComment] Error:", error);
+      logger.error("[useUpdateComment] Error:", error);
       onError?.(error);
     },
   });

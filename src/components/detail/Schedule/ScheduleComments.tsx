@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from "../../utils/logger";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCreateComment } from "../../../hooks/schedule/useCreateComment";
 import { useGetComments } from "../../../hooks/schedule/useGetComments";
@@ -9,6 +10,7 @@ import type { CommentData } from "../../../types/detail/schedule/types";
 import CommentDropdown from "./CommentDropdown";
 import Pagination from "../bulletin/button/pagination";
 import ProfileImage from "../../common/ProfileImage";
+import { showSuccess, showError, showConfirm } from "../../../utils/toast";
 
 type Props = {
   isOpen: boolean;
@@ -56,8 +58,8 @@ const ScheduleComments = ({
       setEditContent("");
     },
     onError: (error) => {
-      console.error("댓글 수정 오류:", error);
-      alert("댓글 수정에 실패했습니다.");
+      logger.error("댓글 수정 오류:", error);
+      showError("댓글 수정에 실패했습니다.");
     },
   });
 
@@ -66,28 +68,28 @@ const ScheduleComments = ({
     planId,
     commentId: deletingCommentId || 0,
     onSuccess: () => {
-      console.log("댓글 삭제 완료");
+      logger.debug("댓글 삭제 완료");
       setDeletingCommentId(null);
     },
     onError: (error) => {
-      console.error("댓글 삭제 오류:", error);
-      alert("댓글 삭제에 실패했습니다.");
+      logger.error("댓글 삭제 오류:", error);
+      showError("댓글 삭제에 실패했습니다.");
       setDeletingCommentId(null);
     },
   });
 
   const handleSubmit = async () => {
     // 디버깅을 위한 로그인 상태 출력
-    console.log("🔍 로그인 상태 체크:", { status, user: !!user, isLoggedIn });
+    logger.debug("🔍 로그인 상태 체크:", { status, user: !!user, isLoggedIn });
 
     // 로그인 체크 먼저
     if (!isLoggedIn) {
-      alert("댓글 작성을 위해 로그인이 필요합니다.");
+      showError("댓글 작성을 위해 로그인이 필요합니다.");
       return;
     }
 
     if (!content.trim()) {
-      alert("댓글 내용을 입력해주세요.");
+      showError("댓글 내용을 입력해주세요.");
       return;
     }
     try {
@@ -98,7 +100,7 @@ const ScheduleComments = ({
       setContent("");
       setIsPrivate(false);
     } catch (error) {
-      console.error("댓글 작성 오류:", error);
+      logger.error("댓글 작성 오류:", error);
     }
   };
 
@@ -150,7 +152,7 @@ const ScheduleComments = ({
 
   // 드롭다운 액션 핸들러
   const handleEdit = (commentId: number) => {
-    console.log("수정 클릭:", commentId);
+    logger.debug("수정 클릭:", commentId);
     const comment = comments.find((c) => c.id === commentId);
     if (comment) {
       setEditingCommentId(commentId);
@@ -158,22 +160,22 @@ const ScheduleComments = ({
     }
   };
 
-  const handleDelete = (commentId: number) => {
-    console.log("삭제 클릭:", commentId);
-    if (window.confirm("댓글을 삭제하시겠습니까?")) {
+  const handleDelete = async (commentId: number) => {
+    logger.debug("삭제 클릭:", commentId);
+    if (await showConfirm("댓글을 삭제하시겠습니까?")) {
       setDeletingCommentId(commentId);
       deleteCommentMutation.mutate();
     }
   };
 
   const handleReport = () => {
-    alert("신고가 완료되었습니다.");
+    showSuccess("신고가 완료되었습니다.");
   };
 
   // 댓글 수정 저장
   const handleSaveEdit = () => {
     if (!editContent.trim()) {
-      alert("댓글 내용을 입력해주세요.");
+      showError("댓글 내용을 입력해주세요.");
       return;
     }
 

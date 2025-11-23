@@ -1,5 +1,6 @@
 // src/components/common/LoginRequiredModal.tsx
 import { useState, useEffect } from "react";
+import { logger } from "../../utils/logger";
 import Modal from "./Modal";
 import modalImg from "../../assets/icons/img_graphic2_340.svg";
 
@@ -9,7 +10,7 @@ const LoginRequiredModal = () => {
   useEffect(() => {
     // ✅ 1) 이벤트 리스너
     const handleNeedLogin = () => {
-      console.log("🎭 needLogin 이벤트 수신, 모달 표시");
+      logger.debug("🎭 needLogin 이벤트 수신, 모달 표시");
       setShowModal(true);
     };
 
@@ -17,7 +18,7 @@ const LoginRequiredModal = () => {
     const checkUrlParams = () => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get("needLogin") === "true") {
-        console.log("🎭 URL 파라미터로 모달 표시");
+        logger.debug("🎭 URL 파라미터로 모달 표시");
         setShowModal(true);
 
         // URL에서 파라미터 제거 (깔끔하게)
@@ -33,19 +34,19 @@ const LoginRequiredModal = () => {
   }, []);
 
   const handleCancel = () => {
-    console.log("🎭 취소 클릭");
+    logger.debug("🎭 취소 클릭");
     setShowModal(false);
   };
 
   const handleLogin = () => {
-    console.log("🎭 로그인 클릭");
+    logger.debug("🎭 로그인 클릭");
     setShowModal(false);
     window.location.href = "/signIn";
   };
 
   if (!showModal) return null;
 
-  console.log("🎭 모달 표시!");
+  logger.debug("🎭 모달 표시!");
 
   return (
     <Modal onClose={handleCancel} maxWidth="max-w-125" padding="p-6">

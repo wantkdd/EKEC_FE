@@ -1,4 +1,5 @@
 import TypeSelector from "./TypeSelector";
+import { logger } from "../../utils/logger";
 import PermissionSelector from "./PermissionSelector";
 import TitleInput from "./TitleInput";
 import ContentInput from "./ContentInput";
@@ -11,6 +12,7 @@ import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 import { createNotice, fetchMyRole } from "../constants";
+import { showSuccess, showError } from "../../../../utils/toast";
 
 const PostNoticeForm = () => {
   const navigate = useNavigate();
@@ -36,7 +38,7 @@ const PostNoticeForm = () => {
       try {
         setIsCheckingRole(true);
         const roleData = await fetchMyRole(crewId);
-        console.log("🔍 사용자 역할 조회 결과:", roleData);
+        logger.debug("🔍 사용자 역할 조회 결과:", roleData);
 
         const role = roleData?.role;
         if (typeof role === "number") {
@@ -50,7 +52,7 @@ const PostNoticeForm = () => {
           setUserRole(0);
         }
       } catch (error) {
-        console.error("역할 조회 실패:", error);
+        logger.error("역할 조회 실패:", error);
         setUserRole(0);
       } finally {
         setIsCheckingRole(false);
@@ -70,18 +72,18 @@ const PostNoticeForm = () => {
 
   const handleSubmit = async () => {
     if (!hasWritePermission) {
-      alert(
+      showError(
         "공지사항 작성 권한이 없습니다. 크루장 또는 운영진만 작성할 수 있습니다."
       );
       return;
     }
 
     if (!title.trim() || !content.trim()) {
-      alert("제목과 내용을 입력해주세요.");
+      showError("제목과 내용을 입력해주세요.");
       return;
     }
     if (!crewId) {
-      alert("크루 ID가 없습니다.");
+      showError("크루 ID가 없습니다.");
       return;
     }
 
@@ -105,7 +107,7 @@ const PostNoticeForm = () => {
           q.queryKey.some((k) => typeof k === "string" && k.includes("notice")),
       });
 
-      alert("공지사항이 성공적으로 등록되었습니다!");
+      showSuccess("공지사항이 성공적으로 등록되었습니다!");
       navigate(`/crew/${cid}/notice`, {
         state: { refresh: true },
       });
@@ -127,8 +129,8 @@ const PostNoticeForm = () => {
           "공지 작성 권한이 없습니다. 크루장 또는 운영진만 공지를 작성할 수 있습니다.";
       }
 
-      alert(msg);
-      console.error("등록 실패:", err);
+      showError(msg);
+      logger.error("등록 실패:", err);
     } finally {
       setIsSubmitting(false);
     }

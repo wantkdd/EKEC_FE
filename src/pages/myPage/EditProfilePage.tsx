@@ -1,4 +1,5 @@
 import { FormProvider, useForm, Controller } from "react-hook-form";
+import { logger } from "../../utils/logger";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 
@@ -111,8 +112,8 @@ export default function EditProfilePage() {
   const [isNotDefine, setIsNotDefine] = useState(user?.gender === 0); // 0: 밝히지 않음
   const watchedValues = watch();
 
-  console.log("watchedValues", watchedValues);
-  console.log("validation", editProfileSchema.safeParse(watchedValues));
+  logger.debug("watchedValues", watchedValues);
+  logger.debug("validation", editProfileSchema.safeParse(watchedValues));
 
   // validation을 기존 스키마에 맞춰서 수정
   const isValid = editProfileSchema.safeParse({
@@ -288,7 +289,7 @@ export default function EditProfilePage() {
           {/* 전화번호 */}
           <PhoneNumEdit
             onPassClick={(carrier, phone) => {
-              console.log("PASS 인증 요청:", carrier, phone);
+              logger.debug("PASS 인증 요청:", carrier, phone);
             }}
           />
 

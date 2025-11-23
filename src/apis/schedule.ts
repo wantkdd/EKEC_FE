@@ -17,7 +17,9 @@ import type {
   ResponseUpdateComment,
   ResponseDeleteComment,
   CommentData,
+  ScheduleItem,
 } from "../types/detail/schedule/types";
+import { logger } from "../utils/logger";
 // image helpers 제거 (원복)
 
 // 이미지 URL 변환 함수
@@ -45,13 +47,13 @@ const transformCommentData = (comment: CommentData): CommentData => ({
 });
 
 // 수정된 댓글 데이터의 이미지 URL 변환
-const transformUpdatedCommentData = (comment: any): any => ({
+const transformUpdatedCommentData = (comment: CommentData): CommentData => ({
   ...comment,
   writerImage: getImageUrl(comment.writerImage, 1),
 });
 
 // 일정 데이터의 이미지 URL 변환
-const transformScheduleData = (schedule: any): any => ({
+const transformScheduleData = (schedule: ScheduleItem): ScheduleItem => ({
   ...schedule,
   writerImage: getImageUrl(schedule.writerImage, 1),
 });
@@ -65,7 +67,7 @@ export const createScheduleApi = async (
     `/crew/${crewId}/plan/`,
     data
   );
-  console.log("[createScheduleApi] response.data:", response.data);
+  logger.debug("[createScheduleApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -75,13 +77,13 @@ export const getScheduleListApi = async (
   page: number = 1,
   size: number = 10
 ): Promise<ResponseScheduleList> => {
-  console.log(
+  logger.debug(
     `[getScheduleListApi] Requesting: /crew/${crewId}/plan/list?page=${page}&size=${size}`
   );
   const response = await privateAPI.get<ResponseScheduleList>(
     `/crew/${crewId}/plan/list?page=${page}&size=${size}`
   );
-  console.log("[getScheduleListApi] response.data:", response.data);
+  logger.debug("[getScheduleListApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -90,25 +92,25 @@ export const getScheduleDetailApi = async (
   crewId: string,
   planId: string
 ): Promise<ResponseScheduleDetail> => {
-  console.log(
+  logger.debug(
     `[getScheduleDetailApi] Requesting: /crew/${crewId}/plan/${planId}`
   );
   const response = await privateAPI.get<ResponseScheduleDetail>(
     `/crew/${crewId}/plan/${planId}`
   );
-  console.log("[getScheduleDetailApi] Full response:", response);
-  console.log("[getScheduleDetailApi] response.data:", response.data);
-  console.log(
-    "[getScheduleDetailApi] Full data object:",
-    JSON.stringify(response.data?.data, null, 2)
+  logger.debug("[getScheduleDetailApi] Full response", { response });
+  logger.debug("[getScheduleDetailApi] response.data", { responseData: response.data });
+  logger.debug(
+    "[getScheduleDetailApi] Full data object",
+    { data: JSON.stringify(response.data?.data, null, 2) }
   );
-  console.log(
-    "[getScheduleDetailApi] isLiked field:",
-    response.data?.data?.isLiked
+  logger.debug(
+    "[getScheduleDetailApi] isLiked field",
+    { isLiked: response.data?.data?.isLiked }
   );
-  console.log(
-    "[getScheduleDetailApi] likeCount field:",
-    response.data?.data?.likeCount
+  logger.debug(
+    "[getScheduleDetailApi] likeCount field",
+    { likeCount: response.data?.data?.likeCount }
   );
 
   // 일정 데이터의 이미지 URL 변환
@@ -125,12 +127,12 @@ export const updateScheduleApi = async (
   planId: string,
   data: RequestUpdateSchedule
 ): Promise<ResponseUpdateSchedule> => {
-  console.log(`[updateScheduleApi] Requesting: /crew/${crewId}/plan/${planId}`);
+  logger.debug(`[updateScheduleApi] Requesting: /crew/${crewId}/plan/${planId}`);
   const response = await privateAPI.put<ResponseUpdateSchedule>(
     `/crew/${crewId}/plan/${planId}`,
     data
   );
-  console.log("[updateScheduleApi] response.data:", response.data);
+  logger.debug("[updateScheduleApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -139,13 +141,13 @@ export const deleteScheduleApi = async (
   crewId: string,
   planId: string
 ): Promise<ResponseDeleteSchedule> => {
-  console.log(
+  logger.debug(
     `[deleteScheduleApi] Requesting: DELETE /crew/${crewId}/plan/${planId}`
   );
   const response = await privateAPI.delete<ResponseDeleteSchedule>(
     `/crew/${crewId}/plan/${planId}`
   );
-  console.log("[deleteScheduleApi] response.data:", response.data);
+  logger.debug("[deleteScheduleApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -154,13 +156,13 @@ export const likeScheduleApi = async (
   crewId: string,
   planId: string
 ): Promise<ResponseScheduleLike> => {
-  console.log(
+  logger.debug(
     `[likeScheduleApi] Requesting: POST /crew/${crewId}/plan/${planId}/like`
   );
   const response = await privateAPI.post<ResponseScheduleLike>(
     `/crew/${crewId}/plan/${planId}/like`
   );
-  console.log("[likeScheduleApi] response.data:", response.data);
+  logger.debug("[likeScheduleApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -169,13 +171,13 @@ export const unlikeScheduleApi = async (
   crewId: string,
   planId: string
 ): Promise<ResponseScheduleUnlike> => {
-  console.log(
+  logger.debug(
     `[unlikeScheduleApi] Requesting: DELETE /crew/${crewId}/plan/${planId}/like`
   );
   const response = await privateAPI.delete<ResponseScheduleUnlike>(
     `/crew/${crewId}/plan/${planId}/like`
   );
-  console.log("[unlikeScheduleApi] response.data:", response.data);
+  logger.debug("[unlikeScheduleApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -184,13 +186,13 @@ export const applyScheduleApi = async (
   crewId: string,
   planId: string
 ): Promise<ResponseScheduleApply> => {
-  console.log(
+  logger.debug(
     `[applyScheduleApi] Requesting: POST /crew/${crewId}/plan/${planId}/apply`
   );
   const response = await privateAPI.post<ResponseScheduleApply>(
     `/crew/${crewId}/plan/${planId}/apply`
   );
-  console.log("[applyScheduleApi] response.data:", response.data);
+  logger.debug("[applyScheduleApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -200,15 +202,15 @@ export const createCommentApi = async (
   planId: string,
   data: RequestCreateComment
 ): Promise<ResponseCreateComment> => {
-  console.log(
+  logger.debug(
     `[createCommentApi] Requesting: POST /crew/${crewId}/plan/${planId}/comments`
   );
-  console.log("[createCommentApi] data:", data);
+  logger.debug("[createCommentApi] data", { data });
   const response = await privateAPI.post<ResponseCreateComment>(
     `/crew/${crewId}/plan/${planId}/comments`,
     data
   );
-  console.log("[createCommentApi] response.data:", response.data);
+  logger.debug("[createCommentApi] response.data", { responseData: response.data });
   return response.data;
 };
 
@@ -219,13 +221,13 @@ export const getCommentsApi = async (
   page: number = 1,
   size: number = 10
 ): Promise<ResponseGetComments> => {
-  console.log(
+  logger.debug(
     `[getCommentsApi] Requesting: GET /crew/${crewId}/plan/${planId}/comments/list?page=${page}&size=${size}`
   );
   const response = await privateAPI.get<ResponseGetComments>(
     `/crew/${crewId}/plan/${planId}/comments/list?page=${page}&size=${size}`
   );
-  console.log("[getCommentsApi] response.data:", response.data);
+  logger.debug("[getCommentsApi] response.data", { responseData: response.data });
 
   // 댓글 데이터의 이미지 URL 변환
   if (response.data.data?.comments) {
@@ -243,15 +245,15 @@ export const updateCommentApi = async (
   commentId: number,
   data: RequestUpdateComment
 ): Promise<ResponseUpdateComment> => {
-  console.log(
+  logger.debug(
     `[updateCommentApi] Requesting: PATCH /crew/${crewId}/plan/${planId}/comments/${commentId}`
   );
-  console.log("[updateCommentApi] data:", data);
+  logger.debug("[updateCommentApi] data", { data });
   const response = await privateAPI.patch<ResponseUpdateComment>(
     `/crew/${crewId}/plan/${planId}/comments/${commentId}`,
     data
   );
-  console.log("[updateCommentApi] response.data:", response.data);
+  logger.debug("[updateCommentApi] response.data", { responseData: response.data });
 
   // 댓글 데이터의 이미지 URL 변환
   if (response.data.data) {
@@ -267,7 +269,7 @@ export const deleteCommentApi = async (
   planId: string,
   commentId: number
 ): Promise<ResponseDeleteComment> => {
-  console.log(
+  logger.debug(
     `[deleteCommentApi] Requesting: DELETE /crew/${crewId}/plan/${planId}/comments/${commentId}`
   );
 
@@ -275,17 +277,22 @@ export const deleteCommentApi = async (
     const response = await privateAPI.delete<ResponseDeleteComment>(
       `/crew/${crewId}/plan/${planId}/comments/${commentId}`
     );
-    console.log("[deleteCommentApi] response.status:", response.status);
-    console.log("[deleteCommentApi] response.data:", response.data);
+    logger.debug("[deleteCommentApi] response.status", { status: response.status });
+    logger.debug("[deleteCommentApi] response.data", { responseData: response.data });
     return response.data;
-  } catch (error: any) {
-    console.error("[deleteCommentApi] Error details:", {
-      message: error.message,
-      status: error.response?.status,
-      statusText: error.response?.statusText,
-      data: error.response?.data,
-      headers: error.response?.headers,
-    });
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'response' in error) {
+      const axiosError = error as { message?: string; response?: { status?: number; statusText?: string; data?: unknown; headers?: unknown } };
+      logger.error("[deleteCommentApi] Error details", error, {
+        message: axiosError.message,
+        status: axiosError.response?.status,
+        statusText: axiosError.response?.statusText,
+        data: axiosError.response?.data,
+        headers: axiosError.response?.headers,
+      });
+    } else {
+      logger.error("[deleteCommentApi] Error details", error);
+    }
     throw error;
   }
 };

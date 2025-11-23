@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 interface SocialSignInButtonProps {
   provider: "google" | "kakao" | "naver";
   bgColor?: string;
@@ -19,7 +20,7 @@ const SocialSignInButton = ({
     const baseUrl = import.meta.env.VITE_API_BASE_URL;
     const authUrl = `${baseUrl}/auth/oauth/${provider}`;
 
-    console.log(`${provider} 로그인 시작:`, authUrl);
+    logger.debug(`${provider} 로그인 시작:`, authUrl);
     window.location.href = authUrl;
   };
 

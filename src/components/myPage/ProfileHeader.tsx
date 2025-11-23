@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { logger } from "../../utils/logger";
 import noProfileImage from "../../assets/icons/ic_logo graphic_74.svg";
 import camera from "../../assets/icons/ic_line_Camera.svg";
 import { useAuthStore } from "../../store/useAuthStore";
@@ -7,9 +8,10 @@ import { privateAPI } from '../../apis/httpClient';
 import Modal from "../common/Modal";
 import yesIcon from "../../assets/icons/img_graphic2_340.svg";
 import noIcon from "../../assets/icons/img_graphic3_340.svg";
+import { showError } from "../../utils/toast";
 export default function ProfileHeader() {
   const { user, setUser } = useAuthStore();
-  console.log("🔍 ProfileHeader Debug:", {
+  logger.debug("🔍 ProfileHeader Debug:", {
     user: user,
     profileImage: user?.profileImage,
     fullUrl: user?.profileImage
@@ -36,13 +38,13 @@ export default function ProfileHeader() {
 
     // 이미지 파일 유효성 검사
     if (!file.type.startsWith("image/")) {
-      alert("이미지 파일만 선택할 수 있습니다.");
+      showError("이미지 파일만 선택할 수 있습니다.");
       return;
     }
 
     // 파일 크기 제한 (예: 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      alert("파일 크기는 5MB 이하여야 합니다.");
+      showError("파일 크기는 5MB 이하여야 합니다.");
       return;
     }
 
@@ -94,7 +96,7 @@ export default function ProfileHeader() {
         throw new Error("업로드 실패");
       }
     } catch (error) {
-      console.error("프로필 이미지 업로드 실패:", error);
+      logger.error("프로필 이미지 업로드 실패:", error);
       setShowErrorModal(true);
     } finally {
       setIsUploading(false);

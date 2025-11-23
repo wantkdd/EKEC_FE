@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { applyScheduleApi } from "../../apis/schedule";
+import { showError } from "../../utils/toast";
+import type { ResponseScheduleDetail, ResponseScheduleList, ScheduleItem } from "../../types/detail/schedule/types";
 
 export const useScheduleApply = (crewId: string, scheduleId: string) => {
   const queryClient = useQueryClient();
@@ -39,7 +41,7 @@ export const useScheduleApply = (crewId: string, scheduleId: string) => {
       ]);
 
       // 상세 페이지 낙관적 업데이트: 즉시 isApplied를 true로 변경
-      queryClient.setQueryData(["schedule", crewId, scheduleId], (old: any) => {
+      queryClient.setQueryData(["schedule", crewId, scheduleId], (old: ResponseScheduleDetail | undefined) => {
         if (!old) return old;
         return {
           ...old,
@@ -53,7 +55,7 @@ export const useScheduleApply = (crewId: string, scheduleId: string) => {
       // scheduleDetail 쿼리도 함께 업데이트
       queryClient.setQueryData(
         ["scheduleDetail", crewId, scheduleId],
-        (old: any) => {
+        (old: ResponseScheduleDetail | undefined) => {
           if (!old) return old;
           return {
             ...old,
@@ -66,13 +68,13 @@ export const useScheduleApply = (crewId: string, scheduleId: string) => {
       );
 
       // 스케줄 리스트 낙관적 업데이트: 해당 일정의 isApplied를 true로 변경
-      queryClient.setQueryData(["schedules", crewId], (old: any) => {
+      queryClient.setQueryData(["schedules", crewId], (old: ResponseScheduleList | undefined) => {
         if (!old?.data?.plans) return old;
         return {
           ...old,
           data: {
             ...old.data,
-            plans: old.data.plans.map((plan: any) =>
+            plans: old.data.plans.map((plan: ScheduleItem) =>
               plan.id === parseInt(scheduleId)
                 ? { ...plan, isApplied: true }
                 : plan
@@ -112,8 +114,8 @@ export const useScheduleApply = (crewId: string, scheduleId: string) => {
           context.previousSchedulesData
         );
       }
-      console.error("일정 신청 실패:", error);
-      alert("일정 신청에 실패했습니다. 다시 시도해주세요.");
+      logger.error("일정 신청 실패:", error);
+      showError("일정 신청에 실패했습니다. 다시 시도해주세요.");
     },
   });
 

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { logger } from "../../utils/logger";
 import { useParams } from "react-router-dom";
 import Header from "../../../../components/detail/header";
 import Tabs from "../../../../components/detail/tabs";
@@ -7,6 +8,7 @@ import NoticeComments from "./NoticeComments";
 import NoticeAbout from "./NoticeAbout";
 import { getNoticeDetail, toggleNoticeLike } from "../constants";
 import type { Notice } from "../../../../types/notice/types";
+import { showInfo, showError } from "../../../../utils/toast";
 
 const NoticeDetail = () => {
   const { crewId, noticeId } = useParams();
@@ -40,7 +42,7 @@ const NoticeDetail = () => {
           setNotice(mappedNotice as any);
         }
       } catch (error) {
-        console.error("공지 상세 조회 실패:", error);
+        logger.error("공지 상세 조회 실패:", error);
       }
     })();
   }, [crewId, noticeId]);
@@ -58,7 +60,7 @@ const NoticeDetail = () => {
           setCommentCount(list.length);
         }
       } catch (err) {
-        console.error("초기 댓글 수 조회 에러:", err);
+        logger.error("초기 댓글 수 조회 에러:", err);
         setCommentCount(0);
       }
     };
@@ -78,7 +80,7 @@ const NoticeDetail = () => {
   const handleLikeToggle = async () => {
     if (!crewId || !noticeId) return;
     if (notice.liked) {
-      alert("이미 좋아요를 눌렀습니다.");
+      showInfo("이미 좋아요를 눌렀습니다.");
       return;
     }
     try {
@@ -95,7 +97,7 @@ const NoticeDetail = () => {
         return { ...prev, liked: nextLiked, likeCount: nextCount };
       });
     } catch (e: any) {
-      alert(e?.message ?? "좋아요 처리에 실패했습니다.");
+      showError(e?.message ?? "좋아요 처리에 실패했습니다.");
     }
   };
 

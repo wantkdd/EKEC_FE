@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { logger } from "../../utils/logger";
 import logo from "../../assets/logo/ic_logo graphic_45.svg";
 import CategoryBgImgs from "../CategoryBgImgs";
 
@@ -23,7 +24,7 @@ export default function CrewCard({
   const navigate = useNavigate();
 
   const handleCardClick = () => {
-    console.log("크루아이디:", crewId);
+    logger.debug("크루아이디:", crewId);
     navigate(`/crew/${crewId}`); // 크루 디테일 페이지로 이동
   };
 

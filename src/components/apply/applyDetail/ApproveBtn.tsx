@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from "../../utils/logger";
 import { useNavigate } from "react-router-dom"; // 추가
 import {
   useApproveMutation,
@@ -22,14 +23,14 @@ export const ApproveBtn = ({ crewId, applyId, onSuccess, onError }: props) => {
 
   const approveMutation = useApproveMutation({
     onSuccess: (data: ApprovalResponse) => {
-      console.log("승인 완료:", data.success?.message);
+      logger.debug("승인 완료:", data.success?.message);
       setShowApproveModal(false);
       onSuccess?.();
       // 승인 완료 후 지원자 목록으로 이동
       navigate(`/crew/${crewId}/applicants`);
     },
     onError: (error: Error) => {
-      console.error("승인 실패:", error);
+      logger.error("승인 실패:", error);
       setShowApproveModal(false);
       onError?.(error.message);
     },
@@ -37,14 +38,14 @@ export const ApproveBtn = ({ crewId, applyId, onSuccess, onError }: props) => {
 
   const rejectMutation = useRejectMutation({
     onSuccess: (data: ApprovalResponse) => {
-      console.log("거부 완료:", data.success?.message);
+      logger.debug("거부 완료:", data.success?.message);
       setShowRejectModal(false);
       onSuccess?.();
       // 거부 완료 후 지원자 목록으로 이동
       navigate(`/crew/${crewId}/applicants`);
     },
     onError: (error: Error) => {
-      console.error("거부 실패:", error);
+      logger.error("거부 실패:", error);
       setShowRejectModal(false);
       onError?.(error.message);
     },

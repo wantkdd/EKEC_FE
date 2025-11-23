@@ -1,6 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import type { CreatedCrew } from "../../types/mypage/CreateCrew";
 import { privateAPI } from '../../apis/httpClient';
+import { logger } from "../../utils/logger";
 
 interface CrewApiResponse {
   crewId: number;
@@ -30,7 +31,7 @@ export function useCreatedCrews() {
         setLoading(true);
         const response = await privateAPI.get("/crew/create/list");
 
-        console.log("API 응답:", response.data);
+        logger.debug("API 응답", { data: response.data });
         if (
           response.data &&
           response.data.success &&
@@ -49,7 +50,7 @@ export function useCreatedCrews() {
             })
           );
 
-          console.log("매핑된 크루들:", mappedCrews);
+          logger.debug("매핑된 크루들", { mappedCrews });
 
           // 전체 데이터 저장
           setAllCrews(mappedCrews);
@@ -65,7 +66,7 @@ export function useCreatedCrews() {
 
         setError(null);
       } catch (err) {
-        console.error("크루 데이터 조회 실패:", err);
+        logger.error("크루 데이터 조회 실패", err);
         setError("크루 데이터를 불러오는데 실패했습니다.");
         setAllCrews([]);
         setDisplayedCrews([]);
@@ -100,7 +101,7 @@ export function useCreatedCrews() {
     }, 300);
   }, [allCrews, currentIndex]);
 
-  console.log("훅에서 반환:", {
+  logger.debug("훅에서 반환", {
     crews: displayedCrews,
     loading,
     error,

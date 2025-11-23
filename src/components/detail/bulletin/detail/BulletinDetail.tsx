@@ -4,6 +4,7 @@ import { useBulletinDetail } from "../../../../hooks/bulletin/useBulletins";
 import { useDeleteBulletin } from "../../../../hooks/bulletin/useBulletinActions";
 import { useBulletinLikeState } from "../../../../hooks/bulletin/useBulletinLikeState";
 import { useAuthStore } from "../../../../store/useAuthStore";
+import { showConfirm } from "../../../../utils/toast";
 import Header from "../../header";
 import Tabs from "../../tabs";
 import BulletinAbout from "./BulletinAbout";
@@ -93,8 +94,8 @@ const BulletinDetail = () => {
   };
 
   // 삭제 버튼 핸들러
-  const handleDelete = () => {
-    if (window.confirm("정말 삭제하시겠습니까?")) {
+  const handleDelete = async () => {
+    if (await showConfirm("정말 삭제하시겠습니까?")) {
       deleteBulletinMutation.mutate(id || "");
     }
   };

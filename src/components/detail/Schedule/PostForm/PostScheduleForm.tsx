@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { logger } from "../../utils/logger";
 import { useParams } from "react-router-dom";
 import TypeSelector from "./TypeSelector";
 import DateSelector from "./DateSelector";
@@ -14,6 +15,7 @@ import { useCreateSchedule } from "../../../../hooks/schedule/useCreateSchedule"
 import { useUpdateSchedule } from "../../../../hooks/schedule/useUpdateSchedule";
 import { useScheduleDetail } from "../../../../hooks/schedule/useScheduleDetail";
 import type { ScheduleType } from "../../../../types/detail/schedule/types";
+import { showError } from "../../../../utils/toast";
 
 const PostScheduleForm = () => {
   const { crewId, id } = useParams<{ crewId: string; id?: string }>();
@@ -71,35 +73,35 @@ const PostScheduleForm = () => {
   // 폼 제출 처리
   const handleSubmit = () => {
     if (!crewId) {
-      alert("크루 ID가 없습니다.");
+      showError("크루 ID가 없습니다.");
       return;
     }
 
     if (!title.trim()) {
-      alert("제목을 입력해주세요.");
+      showError("제목을 입력해주세요.");
       return;
     }
 
     // HTML 태그를 제거하고 실제 텍스트 내용만 추출하여 검증
     const textContent = content.replace(/<[^>]*>/g, "").trim();
     if (!textContent) {
-      alert("본문을 입력해주세요.");
+      showError("본문을 입력해주세요.");
       return;
     }
 
     if (!selectedDate) {
-      alert("날짜를 선택해주세요.");
+      showError("날짜를 선택해주세요.");
       return;
     }
 
     // 회비가 체크되어 있을 때만 회비 관련 검증
     if (hasFee) {
       if (fee <= 0) {
-        alert("회비 금액을 입력해주세요.");
+        showError("회비 금액을 입력해주세요.");
         return;
       }
       if (!feePurpose.trim()) {
-        alert("회비 사용 목적을 입력해주세요.");
+        showError("회비 사용 목적을 입력해주세요.");
         return;
       }
     }
@@ -123,7 +125,7 @@ const PostScheduleForm = () => {
       feePurpose: hasFee ? feePurpose.trim() : "",
     };
 
-    console.log("전송할 데이터:", requestData);
+    logger.debug("전송할 데이터:", requestData);
 
     if (isEditMode && id) {
       // 수정 모드

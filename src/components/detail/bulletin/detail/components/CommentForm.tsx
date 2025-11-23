@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { showError } from "../../../../../utils/toast";
 
 type Props = {
   onSubmit: (content: string, isPrivate: boolean) => void;
@@ -11,7 +12,7 @@ const CommentForm = ({ onSubmit, isLoading }: Props) => {
 
   const handleSubmit = () => {
     if (!content.trim()) {
-      alert("댓글 내용을 입력해주세요.");
+      showError("댓글 내용을 입력해주세요.");
       return;
     }
     onSubmit(content.trim(), isPrivate);

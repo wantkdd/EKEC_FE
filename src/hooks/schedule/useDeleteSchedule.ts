@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteScheduleApi } from "../../apis/schedule";
 import { useNavigate } from "react-router-dom";
 import type { ResponseDeleteSchedule } from "../../types/detail/schedule/types";
+import { showError } from "../../utils/toast";
 
 interface DeleteScheduleParams {
   crewId: string;
@@ -15,7 +16,7 @@ export const useDeleteSchedule = () => {
   return useMutation<ResponseDeleteSchedule, Error, DeleteScheduleParams>({
     mutationFn: ({ crewId, planId }) => deleteScheduleApi(crewId, planId),
     onSuccess: (data, { crewId }) => {
-      console.log("일정 삭제 성공:", data);
+      logger.debug("일정 삭제 성공:", data);
 
       // 일정 목록과 상세 캐시 무효화
       queryClient.invalidateQueries({
@@ -29,8 +30,8 @@ export const useDeleteSchedule = () => {
       navigate(`/crew/${crewId}/schedule`);
     },
     onError: (error) => {
-      console.error("일정 삭제 실패:", error);
-      alert("일정 삭제에 실패했습니다.");
+      logger.error("일정 삭제 실패:", error);
+      showError("일정 삭제에 실패했습니다.");
     },
   });
 };

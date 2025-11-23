@@ -32,13 +32,18 @@ export const useApprovalMutation = ({
       onSuccess?.(data);
     },
 
-    onError: (error: any) => {
-      console.error("승인/거부 처리 중 에러:", error);
+    onError: (error: Error) => {
+      logger.error("승인/거부 처리 중 에러:", error);
 
       // 서버 에러 메시지 추출
-      const serverMessage = error.response?.data?.error?.reason;
-      const errorMessage =
-        serverMessage || error.message || "처리 중 오류가 발생했습니다.";
+      let errorMessage = "처리 중 오류가 발생했습니다.";
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { data?: { error?: { reason?: string } } }; message?: string };
+        const serverMessage = axiosError.response?.data?.error?.reason;
+        errorMessage = serverMessage || axiosError.message || errorMessage;
+      } else if (error.message) {
+        errorMessage = error.message;
+      }
 
       onError?.(new Error(errorMessage));
     },

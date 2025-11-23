@@ -1,4 +1,5 @@
 import TypeSelector from "./TypeSelector";
+import { logger } from "../../utils/logger";
 import PermissionSelector from "./PermissionSelector";
 import TitleInput from "./TitleInput";
 import ContentInput from "./ContentInput";
@@ -16,6 +17,7 @@ import {
   useCreateBulletin,
   useUpdateBulletin,
 } from "../../../../hooks/bulletin/useBulletinActions";
+import { showSuccess, showError } from "../../../../utils/toast";
 
 const PostBulletinForm = () => {
   const navigate = useNavigate();
@@ -81,11 +83,11 @@ const PostBulletinForm = () => {
 
   const handleSubmit = async () => {
     if (!title.trim()) {
-      alert("제목을 입력해주세요.");
+      showError("제목을 입력해주세요.");
       return;
     }
     if (!content.trim()) {
-      alert("내용을 입력해주세요.");
+      showError("내용을 입력해주세요.");
       return;
     }
 
@@ -96,7 +98,7 @@ const PostBulletinForm = () => {
         // 수정 모드
         const userId = user?.id || 1;
         const remainingImageIds = existingImages.map((img) => img.id);
-        console.log("🔍 수정 데이터:", {
+        logger.debug("🔍 수정 데이터:", {
           title,
           content,
           images,
@@ -115,7 +117,7 @@ const PostBulletinForm = () => {
           allowPrivateComment,
           allowShare,
         });
-        alert("게시글이 성공적으로 수정되었습니다.");
+        showSuccess("게시글이 성공적으로 수정되었습니다.");
         navigate(`/crew/${crewId}/bulletin/${postId}`);
       } else {
         // 작성 모드
@@ -133,13 +135,13 @@ const PostBulletinForm = () => {
           allowShare,
         };
 
-        console.log("PostBulletinForm - 전송할 데이터:", postData);
+        logger.debug("PostBulletinForm - 전송할 데이터:", postData);
 
         await createBulletinMutation.mutateAsync(postData);
       }
     } catch (error) {
-      console.error("PostBulletinForm - 오류:", error);
-      alert(
+      logger.error("PostBulletinForm - 오류:", error);
+      showError(
         isEditMode
           ? "게시글 수정 중 오류가 발생했습니다."
           : "게시글 등록 중 오류가 발생했습니다."

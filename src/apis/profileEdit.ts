@@ -2,6 +2,7 @@
 
 import { privateAPI } from "./httpClient";
 import { AxiosError } from "axios";
+import { logger } from "../utils/logger";
 
 // 타입 정의
 export interface ProfileUpdateData {
@@ -76,7 +77,7 @@ export const updateProfile = async (
 
     return response.data;
   } catch (error) {
-    console.error("프로필 수정 실패:", error);
+    logger.error("프로필 수정 실패", error);
 
     if (error instanceof Error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -94,7 +95,7 @@ export const getProfile = async (): Promise<ApiResponse<User>> => {
     const response = await privateAPI.get("/api/auth/profile");
     return response.data;
   } catch (error) {
-    console.error("프로필 조회 실패:", error);
+    logger.error("프로필 조회 실패", error);
     throw error;
   }
 };

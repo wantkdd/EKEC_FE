@@ -10,7 +10,7 @@ export function useInternalSetters() {
     <T>(setter: React.Dispatch<React.SetStateAction<T>>) =>
     (updater: React.SetStateAction<T>) => {
       mark();
-      setter(updater as any);
+      setter(updater);
     };
 
   return { flagRef, mark, wrap };

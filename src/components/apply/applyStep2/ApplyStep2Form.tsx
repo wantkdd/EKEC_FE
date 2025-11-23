@@ -1,5 +1,6 @@
 // src/components/apply/CustomQuestionsForm.tsx
 import { useEffect, useMemo, useRef } from "react";
+import { logger } from "../../utils/logger";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -143,7 +144,7 @@ export default function CustomQuestionsForm({
           );
         };
         const handleEtcChange = (text: string) => {
-          console.log("🔵 handleEtcChange 호출:", {
+          logger.debug("🔵 handleEtcChange 호출:", {
             text,
             key,
             currentValues: cur?.values,

@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
+import { logger } from "../../utils/logger";
 import uploadIc from "../../../../assets/icons/ic_upload.svg";
+import { showWarning } from "../../../../utils/toast";
 
 interface ImageAttachmentProps {
   onValueChange?: (files: File[]) => void;
@@ -16,7 +18,7 @@ const ImageAttachment: React.FC<ImageAttachmentProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    console.log("📎 ImageAttachment - selectedFiles 변경:", selectedFiles);
+    logger.debug("📎 ImageAttachment - selectedFiles 변경:", selectedFiles);
     onValueChange?.(selectedFiles);
   }, [selectedFiles]);
 
@@ -25,7 +27,7 @@ const ImageAttachment: React.FC<ImageAttachmentProps> = ({
     if (selectedFiles.length + files.length <= 5) {
       setSelectedFiles([...selectedFiles, ...files]);
     } else {
-      alert("최대 5개까지만 첨부할 수 있습니다.");
+      showWarning("최대 5개까지만 첨부할 수 있습니다.");
     }
   };
 

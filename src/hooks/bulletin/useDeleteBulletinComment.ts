@@ -1,18 +1,19 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteBulletinCommentApi } from "../../apis/bulletins";
+import type { BulletinApiData } from "../../types/bulletin/types";
 
 export const useDeleteBulletinComment = (crewId: string, postId: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: (commentId: string) => {
-      console.log(
+      logger.debug(
         `[useDeleteBulletinComment] Deleting comment ${commentId} for crew ${crewId}, post ${postId}`
       );
       return deleteBulletinCommentApi(crewId, postId, commentId);
     },
     onMutate: async () => {
-      console.log(
+      logger.debug(
         `[useDeleteBulletinComment] onMutate: Starting optimistic update`
       );
       // 관련 쿼리들을 취소하여 낙관적 업데이트와 충돌 방지
@@ -30,7 +31,7 @@ export const useDeleteBulletinComment = (crewId: string, postId: string) => {
       // 낙관적 업데이트: 댓글 수 -1
       queryClient.setQueryData(
         ["bulletin", parseInt(crewId), parseInt(postId)],
-        (old: any) => {
+        (old: BulletinApiData | undefined) => {
           if (!old) return old;
           return {
             ...old,
@@ -42,7 +43,7 @@ export const useDeleteBulletinComment = (crewId: string, postId: string) => {
       return { previousBulletinDetail };
     },
     onSuccess: () => {
-      console.log(`[useDeleteBulletinComment] onSuccess: Deletion successful`);
+      logger.debug(`[useDeleteBulletinComment] onSuccess: Deletion successful`);
       // 댓글 삭제 성공 시 댓글 목록 쿼리 무효화하여 새로고침
       queryClient.invalidateQueries({
         queryKey: ["bulletinComments", crewId, postId],
@@ -57,7 +58,7 @@ export const useDeleteBulletinComment = (crewId: string, postId: string) => {
       });
     },
     onError: (error, _variables, context) => {
-      console.error(`[useDeleteBulletinComment] onError:`, error);
+      logger.error(`[useDeleteBulletinComment] onError:`, error);
       // 에러 발생 시 이전 데이터로 롤백
       if (context?.previousBulletinDetail) {
         queryClient.setQueryData(
@@ -65,7 +66,7 @@ export const useDeleteBulletinComment = (crewId: string, postId: string) => {
           context.previousBulletinDetail
         );
       }
-      console.error("댓글 삭제 실패:", error);
+      logger.error("댓글 삭제 실패:", error);
     },
   });
 };

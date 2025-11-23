@@ -2,6 +2,7 @@
 import { useMutation } from "@tanstack/react-query";
 import { postApply } from "../../apis/crewApply";
 import type { ApplyAnswer, ApplyRequestBody } from "../../types/apply/types";
+import { showError } from "../../utils/toast";
 
 function normalizeAnswers(answers: ApplyAnswer[]): ApplyAnswer[] {
   return answers.map((ans) =>
@@ -32,11 +33,13 @@ export function useApplySubmit() {
       };
       return await postApply(crewId, payload);
     },
-    onError: (err: any) => {
-      const msg =
-        err?.response?.data?.message ||
-        "지원에 실패했습니다. 잠시 후 다시 시도해주세요.";
-      alert(msg);
+    onError: (err: unknown) => {
+      let msg = "지원에 실패했습니다. 잠시 후 다시 시도해주세요.";
+      if (err && typeof err === 'object' && 'response' in err) {
+        const error = err as { response?: { data?: { message?: string } } };
+        msg = error.response?.data?.message || msg;
+      }
+      showError(msg);
     },
   });
 }

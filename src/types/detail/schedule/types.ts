@@ -42,7 +42,7 @@ export interface ResponseCreateSchedule {
   error: null | {
     errorCode: string;
     reason: string;
-    data: any;
+    data: unknown;
   };
   data: ScheduleData | null;
 }
@@ -93,7 +93,7 @@ export interface ResponseScheduleList {
   error: null | {
     errorCode: string;
     reason: string;
-    data: any;
+    data: unknown;
   };
   data: ScheduleListData;
 }
@@ -104,7 +104,7 @@ export interface ResponseScheduleDetail {
   error: null | {
     errorCode: string;
     reason: string;
-    data: any;
+    data: unknown;
   };
   data: ScheduleItem;
 }
@@ -118,7 +118,7 @@ export interface ResponseUpdateSchedule {
   error: null | {
     errorCode: string;
     reason: string;
-    data: any;
+    data: unknown;
   };
   success: ScheduleItem | null;
 }
@@ -129,7 +129,7 @@ export interface ResponseDeleteSchedule {
   error: null | {
     errorCode: string;
     reason: string;
-    data: any;
+    data: unknown;
   };
   data: null;
 }
@@ -174,7 +174,7 @@ export interface ResponseScheduleApply {
   error: null | {
     errorCode: string;
     reason: string;
-    data?: any;
+    data?: unknown;
   };
   success: ScheduleApplyData | null;
 }
@@ -202,7 +202,7 @@ export interface ResponseCreateComment {
   error: null | {
     errorCode: string;
     reason: string;
-    data?: any;
+    data?: unknown;
   };
   data: CommentData | null;
 }
@@ -231,7 +231,7 @@ export interface ResponseGetComments {
   error: null | {
     errorCode: string;
     reason: string;
-    data?: any;
+    data?: unknown;
   };
   data: {
     comments: CommentData[];
@@ -260,7 +260,7 @@ export interface ResponseUpdateComment {
   error: null | {
     errorCode: string;
     reason: string;
-    data?: any;
+    data?: unknown;
   };
   data: UpdatedCommentData | null;
 }
@@ -271,7 +271,7 @@ export interface ResponseDeleteComment {
   error: null | {
     errorCode: string;
     reason: string;
-    data?: any;
+    data?: unknown;
   };
   data: null;
 }

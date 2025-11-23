@@ -3,6 +3,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import Album from "../../components/detail/album";
 import { fetchCrewInfo, updateCrewIntroduction } from "./constants";
+import { showError } from "../../utils/toast";
 
 const AboutSection: React.FC = () => {
   const { crewId } = useParams();
@@ -36,7 +37,7 @@ const AboutSection: React.FC = () => {
       await qc.invalidateQueries({ queryKey: ["crewInfo", crewId] });
       navigate(`/crew/${crewId}`); // 보기 모드로 복귀
     },
-    onError: (err: any) => alert(err?.message ?? "소개 수정에 실패했습니다."),
+    onError: (err: any) => showError(err?.message ?? "소개 수정에 실패했습니다."),
   });
 
   return (

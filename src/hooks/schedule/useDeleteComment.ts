@@ -1,12 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCommentApi } from "../../apis/schedule";
+import type { ResponseScheduleDetail } from "../../types/detail/schedule/types";
 
 interface UseDeleteCommentParams {
   crewId: string;
   planId: string;
   commentId: number;
   onSuccess?: () => void;
-  onError?: (error: any) => void;
+  onError?: (error: Error) => void;
 }
 
 export const useDeleteComment = ({
@@ -20,13 +21,13 @@ export const useDeleteComment = ({
 
   return useMutation({
     mutationFn: () => {
-      console.log(
+      logger.debug(
         `[useDeleteComment] Deleting comment ${commentId} for crew ${crewId}, plan ${planId}`
       );
       return deleteCommentApi(crewId, planId, commentId);
     },
     onMutate: async () => {
-      console.log(`[useDeleteComment] onMutate: Starting optimistic update`);
+      logger.debug(`[useDeleteComment] onMutate: Starting optimistic update`);
       // 댓글 삭제 시 낙관적 업데이트로 댓글 개수 감소
       const scheduleDetailQueryKey = ["schedule", "detail", crewId, planId];
 
@@ -36,7 +37,7 @@ export const useDeleteComment = ({
 
       const previousData = queryClient.getQueryData(scheduleDetailQueryKey);
 
-      queryClient.setQueryData(scheduleDetailQueryKey, (old: any) => {
+      queryClient.setQueryData(scheduleDetailQueryKey, (old: ResponseScheduleDetail | undefined) => {
         if (old?.data) {
           return {
             ...old,
@@ -52,7 +53,7 @@ export const useDeleteComment = ({
       return { previousData };
     },
     onSuccess: (data) => {
-      console.log(
+      logger.debug(
         `[useDeleteComment] onSuccess: Comment deleted successfully`,
         data
       );
@@ -69,7 +70,7 @@ export const useDeleteComment = ({
       onSuccess?.();
     },
     onError: (error, _variables, context) => {
-      console.error(
+      logger.error(
         `[useDeleteComment] onError: Failed to delete comment`,
         error
       );
@@ -81,7 +82,7 @@ export const useDeleteComment = ({
         );
       }
 
-      console.error("[useDeleteComment] Error:", error);
+      logger.error("[useDeleteComment] Error:", error);
       onError?.(error);
     },
   });

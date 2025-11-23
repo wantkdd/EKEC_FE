@@ -1,5 +1,6 @@
 // src/pages/apply/index.tsx
 import Header from "../../components/apply/Header";
+import { logger } from "../../utils/logger";
 import Info from "../../components/apply/Info";
 import ApplicationForm from "../../components/apply/ApplyForm";
 import { useParams } from "react-router-dom";
@@ -24,7 +25,7 @@ export default function ApplyPage() {
           userId={userId}
           showDebug
           onSubmit={async (body) => {
-            console.log("🚀 submit body", { crewId, body });
+            logger.debug("🚀 submit body", { crewId, body });
             // await API.post(`/api/crew/${crewId}/apply`, body);
           }}
         />

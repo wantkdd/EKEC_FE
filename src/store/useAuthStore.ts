@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { logger } from "../utils/logger";
 import { persist } from "zustand/middleware";
 import { refreshApi, signOutApi } from "../apis/auth";
 import type { ResponseRefresh } from "../types/auth/types";
@@ -122,7 +123,7 @@ export const useAuthStore = create<AuthState>()(
 
           get().cleanupAndLogout();
         } catch (error) {
-          console.error("Auth initialization failed:", error);
+          logger.error("Auth initialization failed:", error);
 
           const hadSession = shouldTreatAsExpiredSession();
 
@@ -183,7 +184,7 @@ export const useAuthStore = create<AuthState>()(
 
         // 강제 로그아웃 설정이 켜져있으면 서버에도 로그아웃 요청
         if (FORCE_LOGOUT_ON_MODAL) {
-          signOutApi().catch((err) => console.warn("signOutApi failed", err));
+          signOutApi().catch((err) => logger.warn("signOutApi failed", err));
         }
 
         // 상태 정리
@@ -247,7 +248,7 @@ export const useAuthStore = create<AuthState>()(
 
           set({ avatarUrl: objectUrl });
         } catch (error) {
-          console.error("Avatar load failed:", error);
+          logger.error("Avatar load failed:", error);
           const prev = get().avatarUrl;
           if (prev) URL.revokeObjectURL(prev);
           set({ avatarUrl: null });

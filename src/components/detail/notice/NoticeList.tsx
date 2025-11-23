@@ -1,4 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
+import { logger } from "../../utils/logger";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import NoticeItem from "../notice/NoticeItem";
@@ -50,9 +51,9 @@ const NoticeList: React.FC = () => {
   });
 
   const notices: Notice[] = React.useMemo(() => {
-    console.log("📦 전체 응답 데이터:", noticesResponse);
-    console.log("📦 noticesResponse.data:", noticesResponse?.data);
-    console.log("📦 noticesResponse.data?.data:", noticesResponse?.data?.data);
+    logger.debug("📦 전체 응답 데이터:", noticesResponse);
+    logger.debug("📦 noticesResponse.data:", noticesResponse?.data);
+    logger.debug("📦 noticesResponse.data?.data:", noticesResponse?.data?.data);
 
     // API 응답 구조에 맞게 데이터 추출 (여러 가능한 구조 시도)
     let rawNotices: any[] = [];
@@ -65,7 +66,7 @@ const NoticeList: React.FC = () => {
       rawNotices = noticesResponse;
     }
     
-    console.log("📋 추출된 rawNotices:", rawNotices);
+    logger.debug("📋 추출된 rawNotices:", rawNotices);
 
     if (!Array.isArray(rawNotices)) return [];
     

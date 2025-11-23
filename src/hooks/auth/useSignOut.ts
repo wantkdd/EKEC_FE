@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { signOutApi } from "../../apis/auth";
 import type { ResponseSignOut } from "../../types/auth/types";
 import { useAuthStore } from "../../store/useAuthStore";
+import { showError } from "../../utils/toast";
 
 export const useSignOut = () => {
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export const useSignOut = () => {
       queryClient.clear();
     },
     onSuccess: (response) => {
-      console.log("로그아웃 응답:", response);
+      logger.debug("로그아웃 응답", { response });
 
       if (response.resultType === "SUCCESS") {
         localStorage.clear();
@@ -27,13 +28,13 @@ export const useSignOut = () => {
 
         navigate("/");
       } else {
-        console.error("로그아웃 실패:", response.error);
-        alert(response.error?.reason || "로그아웃에 실패했습니다.");
+        logger.error("로그아웃 실패", undefined, { error: response.error });
+        showError(response.error?.reason || "로그아웃에 실패했습니다.");
       }
     },
     onError: (error) => {
-      console.error("로그아웃 오류:", error);
-      alert("로그아웃 중 오류가 발생했습니다.");
+      logger.error("로그아웃 오류", error);
+      showError("로그아웃 중 오류가 발생했습니다.");
     },
   });
 };

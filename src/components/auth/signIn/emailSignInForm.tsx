@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { logger } from "../../utils/logger";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
@@ -42,7 +43,7 @@ const EmailSignInForm: React.FC = () => {
         password: data.password,
       });
     } catch (error) {
-      console.error("로그인 에러:", error);
+      logger.error("로그인 에러:", error);
     }
   };
 
