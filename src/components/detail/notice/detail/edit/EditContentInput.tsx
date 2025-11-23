@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Editor } from "@toast-ui/react-editor";
 import "@toast-ui/editor/dist/toastui-editor.css";
+import { SafeHtml } from "../../../../common/SafeHtml";
 
 interface ContentInputProps {
   onValueChange: (value: string) => void;
@@ -51,9 +52,9 @@ const ContentInput: React.FC<ContentInputProps> = ({ onValueChange, initialValue
         />
       </div>
 
-      <div
+      <SafeHtml
+        html={content}
         className="border border-gray-300 p-2"
-        dangerouslySetInnerHTML={{ __html: content }}
       />
     </div>
   );

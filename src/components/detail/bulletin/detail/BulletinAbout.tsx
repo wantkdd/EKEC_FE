@@ -1,4 +1,5 @@
 import type { Bulletin } from "../../../../types/bulletin/types";
+import { SafeHtml } from "../../../common/SafeHtml";
 
 interface BulletinAboutProps {
   bulletin: Bulletin;
@@ -7,11 +8,9 @@ interface BulletinAboutProps {
 const BulletinAbout: React.FC<BulletinAboutProps> = ({ bulletin }) => {
   return (
     <div className="text-sm bg-[#F7F8FC] px-4 py-6 rounded-2xl font-semibold text-gray-800 space-y-1">
-      <div
+      <SafeHtml
+        html={bulletin.content || ""}
         className="text-gray-700 font-normal whitespace-pre-wrap leading-relaxed prose prose-sm max-w-none [&>p]:mb-3 [&>br]:block [&>br]:mb-2 [&>strong]:font-semibold [&>em]:italic [&>ul]:list-disc [&>ul]:ml-4 [&>ol]:list-decimal [&>ol]:ml-4"
-        dangerouslySetInnerHTML={{
-          __html: bulletin.content || "",
-        }}
       />
 
       {bulletin?.images && bulletin.images.length > 0 && (
