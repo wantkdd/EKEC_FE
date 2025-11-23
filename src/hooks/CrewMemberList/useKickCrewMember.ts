@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 // src/hooks/useCrewMember/useKickCrewMember.ts
 import { kickCrewMember } from "../../apis/crewMember";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

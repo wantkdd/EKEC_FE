@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { updateBulletinCommentApi } from "../../apis/bulletins";
 import { showError } from "../../utils/toast";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../../utils/logger";
 import { AnimatePresence, motion } from "framer-motion";
 import CommentForm from "./components/CommentForm";
 import CommentList from "./components/CommentList";

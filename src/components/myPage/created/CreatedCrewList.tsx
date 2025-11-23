@@ -1,5 +1,5 @@
 import InfiniteScroll from "react-infinite-scroll-component";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import CrewCard from "../CrewCard";
 import { useCreatedCrews } from "../../../hooks/createdCrew/useCreatedCrew";
 import noIcon from "../../../assets/icons/img_graphic3_340.svg";

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../../utils/logger";
 import { useParams } from "react-router-dom";
 import TypeSelector from "./TypeSelector";
 import DateSelector from "./DateSelector";

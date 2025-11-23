@@ -29,7 +29,10 @@ export interface ApprovalResponse {
 export const getApplyInit = async (crewId: number): Promise<ApiSuccess> => {
   const res = await privateAPI.get<ApiResponse>(`/crew/apply/${crewId}/apply`);
   if (res.data.resultType !== "SUCCESS") {
-    throw new Error(res.data.error ?? "질문/조건 조회 실패");
+    const errorMsg = typeof res.data.error === 'string'
+      ? res.data.error
+      : res.data.error?.reason ?? "질문/조건 조회 실패";
+    throw new Error(errorMsg);
   }
   return res.data.success; // { step1, step2, recruitMessage }
 };

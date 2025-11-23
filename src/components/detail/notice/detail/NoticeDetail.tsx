@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../../utils/logger";
 import { useParams } from "react-router-dom";
 import Header from "../../../../components/detail/header";
 import Tabs from "../../../../components/detail/tabs";

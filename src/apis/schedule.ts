@@ -17,6 +17,7 @@ import type {
   ResponseUpdateComment,
   ResponseDeleteComment,
   CommentData,
+  UpdatedCommentData,
   ScheduleItem,
 } from "../types/detail/schedule/types";
 import { logger } from "../utils/logger";
@@ -47,7 +48,7 @@ const transformCommentData = (comment: CommentData): CommentData => ({
 });
 
 // 수정된 댓글 데이터의 이미지 URL 변환
-const transformUpdatedCommentData = (comment: CommentData): CommentData => ({
+const transformUpdatedCommentData = (comment: UpdatedCommentData): UpdatedCommentData => ({
   ...comment,
   writerImage: getImageUrl(comment.writerImage, 1),
 });

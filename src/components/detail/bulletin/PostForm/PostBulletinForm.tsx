@@ -1,5 +1,5 @@
 import TypeSelector from "./TypeSelector";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../../utils/logger";
 import PermissionSelector from "./PermissionSelector";
 import TitleInput from "./TitleInput";
 import ContentInput from "./ContentInput";

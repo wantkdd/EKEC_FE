@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import { useNavigate } from "react-router-dom";
 import { refreshApi } from "../../../apis/auth";
 import { useAuthStore } from "../../../store/useAuthStore";

@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 

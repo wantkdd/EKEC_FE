@@ -1,5 +1,5 @@
 import React, { useCallback } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import isAttachedIcon from "../../../assets/icons/ic_isAttached.svg";
 import type { Bulletin } from "../../../types/bulletin/types";
 import iconHeart from "../../../assets/schedule/ic_Heart.svg";

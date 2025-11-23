@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from "framer-motion";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../../utils/logger";
 import { useEffect, useRef, useState } from "react";
 import moreIcon from "../../../../assets/schedule/ic_More.svg";
-import { showSuccess, showError, showConfirm } from "../../utils/toast";
+import { showSuccess, showError, showConfirm } from "../../../../utils/toast";
 
 type Comment = {
   id: number;

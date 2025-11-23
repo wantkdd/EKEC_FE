@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { likeScheduleApi, unlikeScheduleApi } from "../../apis/schedule";
 import type { ResponseScheduleDetail } from "../../types/detail/schedule/types";

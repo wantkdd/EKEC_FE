@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../../utils/logger";
 import uploadIc from "../../../../assets/icons/ic_upload.svg";
 import { showWarning } from "../../../../utils/toast";
 

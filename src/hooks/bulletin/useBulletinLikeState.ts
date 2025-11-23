@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useState, useEffect } from "react";
 import { useLikeBulletin, useUnlikeBulletin } from "./useBulletinLike";
 

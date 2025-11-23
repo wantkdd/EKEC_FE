@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import Input from "../input";
 import AuthBtn from "../authBtn";
 import infoIcon from "../../../assets/icons/createProfile/info.svg";

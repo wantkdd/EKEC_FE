@@ -21,17 +21,19 @@ export enum LogLevel {
 /**
  * 로그 메타데이터
  */
-interface LogMeta {
+export interface LogMeta {
   [key: string]: unknown;
 }
 
 /**
  * 로그 포맷터
  */
-const formatLog = (level: string, message: string, meta?: LogMeta): string => {
+const formatLog = (level: string, ...args: unknown[]): string => {
   const timestamp = new Date().toISOString();
-  const metaStr = meta ? ` ${JSON.stringify(meta)}` : "";
-  return `[${timestamp}] [${level}] ${message}${metaStr}`;
+  const message = args.map(arg =>
+    typeof arg === 'object' ? JSON.stringify(arg) : String(arg)
+  ).join(' ');
+  return `[${timestamp}] [${level}] ${message}`;
 };
 
 /**
@@ -61,31 +63,31 @@ class Logger {
   /**
    * DEBUG 레벨 로그 (개발 환경에서만)
    */
-  debug(message: string, meta?: LogMeta) {
+  debug(...args: unknown[]) {
     if (this.minLevel <= LogLevel.DEBUG && isDev) {
-      console.debug(formatLog("DEBUG", message, meta));
+      console.debug(formatLog("DEBUG", ...args));
     }
   }
 
   /**
    * INFO 레벨 로그 (개발 환경에서만)
    */
-  info(message: string, meta?: LogMeta) {
+  info(...args: unknown[]) {
     if (this.minLevel <= LogLevel.INFO && isDev) {
-      console.info(formatLog("INFO", message, meta));
+      console.info(formatLog("INFO", ...args));
     }
   }
 
   /**
    * WARN 레벨 로그
    */
-  warn(message: string, meta?: LogMeta) {
+  warn(...args: unknown[]) {
     if (this.minLevel <= LogLevel.WARN) {
       if (isDev) {
-        console.warn(formatLog("WARN", message, meta));
+        console.warn(formatLog("WARN", ...args));
       }
       if (isProd) {
-        sendToExternalService(LogLevel.WARN, message, meta);
+        sendToExternalService(LogLevel.WARN, args.join(' '));
       }
     }
   }
@@ -93,26 +95,14 @@ class Logger {
   /**
    * ERROR 레벨 로그
    */
-  error(message: string, error?: Error | unknown, meta?: LogMeta) {
+  error(...args: unknown[]) {
     if (this.minLevel <= LogLevel.ERROR) {
-      const errorMeta = {
-        ...meta,
-        error: error instanceof Error ? {
-          name: error.name,
-          message: error.message,
-          stack: error.stack,
-        } : error,
-      };
-
       if (isDev) {
-        console.error(formatLog("ERROR", message, errorMeta));
-        if (error instanceof Error) {
-          console.error(error);
-        }
+        console.error(formatLog("ERROR", ...args));
       }
 
       if (isProd) {
-        sendToExternalService(LogLevel.ERROR, message, errorMeta);
+        sendToExternalService(LogLevel.ERROR, args.join(' '));
       }
     }
   }

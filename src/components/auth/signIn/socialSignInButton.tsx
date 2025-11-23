@@ -1,4 +1,4 @@
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 interface SocialSignInButtonProps {
   provider: "google" | "kakao" | "naver";
   bgColor?: string;

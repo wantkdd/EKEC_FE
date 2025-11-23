@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 // hooks/useCrewInfo.ts
 
 import { useState, useEffect } from "react";

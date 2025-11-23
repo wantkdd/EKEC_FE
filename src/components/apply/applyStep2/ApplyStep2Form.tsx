@@ -1,6 +1,6 @@
 // src/components/apply/CustomQuestionsForm.tsx
 import { useEffect, useMemo, useRef } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 

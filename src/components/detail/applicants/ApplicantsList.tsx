@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import ApplicantCard from "./ApplicantCard";
 import { useApplicants } from "../../../hooks/apply/useApplicants";
 import { useInfinite } from "../../../hooks/apply/useInfinite";

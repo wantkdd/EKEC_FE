@@ -1,5 +1,5 @@
 import TypeSelector from "./EditTypeSelector";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../../../utils/logger";
 import PermissionSelector from "./EditPermissionSelector";
 import TitleInput from "./EditTitleInput";
 import ContentInput from "./EditContentInput";

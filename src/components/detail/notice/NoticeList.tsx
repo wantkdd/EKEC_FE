@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import NoticeItem from "../notice/NoticeItem";

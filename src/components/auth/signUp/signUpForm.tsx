@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import EkecLogo from "../../../assets/icons/ic_logo_graphic_45.svg";

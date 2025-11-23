@@ -1,3 +1,4 @@
+import { logger } from "../../utils/logger";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteBulletinCommentApi } from "../../apis/bulletins";
 import type { BulletinApiData } from "../../types/bulletin/types";

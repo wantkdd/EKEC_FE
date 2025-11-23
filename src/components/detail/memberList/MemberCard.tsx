@@ -1,6 +1,6 @@
 import type { MemberCardProps } from "../../../types/detail/crewMember";
 import logo from "../../../assets/logo/ic_logo graphic_45.svg";
-import { logger } from "../../utils/logger";
+import { logger } from "../../../utils/logger";
 import dot from "../../../assets/icons/ic_Dot_36.svg";
 import ToggleMenuWrapper from "./ToggleMenuWrapper";
 import { useKickCrewMember } from "../../../hooks/CrewMemberList/useKickCrewMember";
